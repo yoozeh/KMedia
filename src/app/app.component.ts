@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 
-import { AppJSON, APP_TEXT } from './modules/app-configure/app-configure.module';
+import { AppJSON, APP_TEXT } from './modules/app-services/app-services.module';
 
 @Component({
   selector: 'k-root',
@@ -8,5 +8,7 @@ import { AppJSON, APP_TEXT } from './modules/app-configure/app-configure.module'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(@Inject(APP_TEXT) public text: AppJSON) { }
+  constructor(@Inject(APP_TEXT) public text: AppJSON) {
+    console.log(text);
+  }
 }
