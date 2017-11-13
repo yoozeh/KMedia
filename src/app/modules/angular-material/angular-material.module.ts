@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -39,6 +40,7 @@ import {
   imports: [
     CommonModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -72,6 +74,7 @@ import {
   ],
   exports: [
     BrowserAnimationsModule,
+    FlexLayoutModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
