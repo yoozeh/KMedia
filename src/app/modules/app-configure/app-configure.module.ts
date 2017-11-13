@@ -1,33 +1,24 @@
 import { NgModule, InjectionToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export interface AppConfigure {
+export interface AppJSON {
   [key: string]: any;
 }
 
-export const APP_CONFIG = new InjectionToken<AppConfigure>('Configure');
-export const APP_TEXT = new InjectionToken<AppConfigure>('Text');
+export const APP_CONFIG = new InjectionToken<AppJSON>('Configure');
+export const APP_TEXT = new InjectionToken<AppJSON>('Text');
+
+const CONFIGURE: AppJSON = require('../../../../json/configure.json');
+const TEXT: AppJSON = require('../../../../json/language.' + CONFIGURE.language + '.json');
 
 @NgModule({
   imports: [
     CommonModule
   ],
   providers: [
-    { provide: APP_CONFIG, useValue: AppConfigureModule.configure },
-    { provide: APP_TEXT, useValue: AppConfigureModule.text }
+    { provide: APP_CONFIG, useValue: CONFIGURE },
+    { provide: APP_TEXT, useValue: TEXT }
   ],
   declarations: []
 })
-export class AppConfigureModule {
-
-  private static _configure: AppConfigure = require('../../../../json/configure.json');
-  static get configure(): AppConfigure {
-    return AppConfigureModule._configure;
-  }
-
-  private static _text: AppConfigure = require('../../../../json/language.' + AppConfigureModule._configure.language + '.json');
-  static get text(): AppConfigure {
-    return AppConfigureModule._text;
-  }
-
-}
+export class AppConfigureModule { }
