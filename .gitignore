@@ -1,0 +1,70 @@
+# Compiled output
+/dist
+/dist-app
+/dist-server
+/tmp
+/out-tsc
+
+# Output of 'npm pack'
+*.tgz
+
+# Dependency directories
+/node_modules
+/jspm_packages
+/bower_components
+
+# Typescript v1 declaration files
+/typings
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+/lib-cov
+/coverage
+.env
+.npm
+.grunt
+.node_repl_history
+.nyc_output
+.eslintcache
+.lock-wscript
+.yarn-integrity
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# System Files
+.DS_Store
+Thumbs.db
