@@ -2,7 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "dist-server",
-    "sourceMap": false
+    "sourceMap": false,
+    "types": [
+      "node"
+    ]
   },
   "include": [
     "src/server",
