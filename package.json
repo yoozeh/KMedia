@@ -24,6 +24,7 @@
   "dependencies": {
     "@angular/cli": "^1.5.0",
     "@angular/compiler-cli": "^5.0.1",
+    "@types/node": "^8.0.51",
     "express": "^4.16.2"
   },
   "devDependencies": {
@@ -42,7 +43,6 @@
     "@angular/router": "^5.0.1",
     "@types/jasmine": "^2.6.3",
     "@types/jasminewd2": "^2.0.3",
-    "@types/node": "^8.0.51",
     "codelyzer": "^4.0.1",
     "core-js": "^2.5.1",
     "hammerjs": "^2.0.8",
