@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
 
-import { AppJSON, APP_TEXT } from '../../modules/app-services/app-services.module';
+import { KJSON, APP_TEXT } from '../../modules/app-services/app-services.module';
 
 interface MenuList {
   title: string;
@@ -19,7 +19,7 @@ export class SidenavComponent implements OnInit {
   get menu(): Array<MenuList> { return this._menu; }
 
   constructor(
-    @Inject(APP_TEXT) public text: AppJSON
+    @Inject(APP_TEXT) public text: KJSON
   ) {
     this._menu = [
       {

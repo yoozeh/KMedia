@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Inject, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AppJSON, APP_TEXT } from '../../modules/app-services/app-services.module';
+import { KJSON, APP_TEXT } from '../../modules/app-services/app-services.module';
 
 @Component({
   selector: 'k-toolbar',
@@ -14,24 +14,24 @@ export class ToolbarComponent implements OnInit {
   @Output() public eventEmitter: EventEmitter<string> = new EventEmitter();
 
   constructor(
-    @Inject(APP_TEXT) public text: AppJSON,
+    @Inject(APP_TEXT) public text: KJSON,
     private _router: Router
   ) { }
 
   ngOnInit() { }
 
-  onClickMenu() {
+  onClickMenu(): void {
     this.eventEmitter.emit('toggle');
   }
 
-  onClickLogo() {
+  onClickLogo(): void {
     this._router.navigate(['']);
   }
 
-  onClickLogin() { }
+  onClickLogin(): void { }
 
-  onClickJoin() {
-    this._router.navigate(['join']);
+  onClickJoin(): void {
+    this._router.navigate(['sign-up']);
   }
 
 }

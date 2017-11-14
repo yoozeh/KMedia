@@ -1,32 +1,35 @@
 import { NgModule, InjectionToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export interface AppJSON {
+export interface KJSON {
   [key: string]: any;
 }
 
-class AppJSONValuse {
-  private static _configure: AppJSON = require('../../../../json/configure.json');
-  static get configure(): AppJSON {
-    return AppJSONValuse._configure;
-  }
-  static _text: AppJSON = require('../../../../json/language.' + AppJSONValuse._configure.language + '.json');
-  static get text(): AppJSON {
-    return AppJSONValuse._text;
-  }
-}
+export const APP_CONFIG = new InjectionToken<KJSON>('Configure');
+export const APP_TEXT = new InjectionToken<KJSON>('Text');
 
-export const APP_CONFIG = new InjectionToken<AppJSON>('Configure');
-export const APP_TEXT = new InjectionToken<AppJSON>('Text');
+class AppStaticService {
+
+  private static _configure: KJSON = {
+    httpAddress: location.protocol + '//' + location.host,
+    socketAddress: (location.protocol === 'http:' ? 'ws://' : 'wss://') + location.host,
+    ...require('../../../../json/configure.json')
+  };
+  static get configure(): KJSON { return AppStaticService._configure; }
+
+  static _text: KJSON = require('../../../../json/language.' + AppStaticService._configure.language + '.json');
+  static get text(): KJSON { return AppStaticService._text; }
+
+}
 
 @NgModule({
   imports: [
     CommonModule
   ],
   providers: [
-    { provide: APP_CONFIG, useValue: AppJSONValuse.configure },
-    { provide: APP_TEXT, useValue: AppJSONValuse.text }
-  ],  
+    { provide: APP_CONFIG, useValue: AppStaticService.configure },
+    { provide: APP_TEXT, useValue: AppStaticService.text }
+  ],
   declarations: []
 })
 export class AppServicesModule { }

@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatSidenav } from '@angular/material';
 
 @Component({
   selector: 'k-root',
@@ -8,19 +7,19 @@ import { MatSidenav } from '@angular/material/sidenav';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  
-  @ViewChild(MatSidenav) sidenav;
+
+  @ViewChild(MatSidenav) private _sidenav;
 
   onSidenav(event: string): void {
     switch (event) {
       case 'open':
-        this.sidenav.open();
+        this._sidenav.open();
         break;
       case 'close':
-        this.sidenav.close();
+        this._sidenav.close();
         break;
       case 'toggle':
-        this.sidenav.toggle();
+        this._sidenav.toggle();
         break;
     }
   }

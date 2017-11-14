@@ -14,7 +14,24 @@
   cursor: default;
 }
 
+.k-toolbar-search{
+  margin: 0em;
+  margin-left: 64px;
+  margin-right: 8px;
+  padding: 5px 16px;
+  width: 100%;
+  max-width: 400px;
+  height: 50%;
+  border: none;
+  border-radius: 100px;
+  outline: none;
+  color: #333;
+  background-color: #f0f0f0;
+  font: 14px Arial;
+}
+
 .k-toolbar-button {
-  min-width: 64px;
-  padding: 0 4px;
+  margin: 0 2px !important;
+  padding: 0 !important;
+  min-width: 72px !important;
 }

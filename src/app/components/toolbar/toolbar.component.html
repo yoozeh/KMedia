@@ -3,7 +3,9 @@
     <mat-icon>menu</mat-icon>
   </button>
   <a class="mat-button k-toolbar-logo" (click)="onClickLogo()">{{ text.logo_text }}</a>
-  <div fxFlex></div>
-  <button mat-button class="k-toolbar-button" (click)="onClickLogin()">{{ text.login }}</button>
-  <button mat-button class="k-toolbar-button" (click)="onClickJoin()">{{ text.join }}</button>
+  <div fxFlex fxLayoutAlign="end center">
+    <input type="search" class="k-toolbar-search" placeholder="Search" fxHide.lt-sm>
+  </div>
+  <button mat-button class="k-toolbar-button" (click)="onClickLogin()">{{ text.sign_in }}</button>
+  <button mat-button class="k-toolbar-button" (click)="onClickJoin()">{{ text.sign_up }}</button>
 </mat-toolbar>

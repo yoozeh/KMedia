@@ -1,3 +1,6 @@
 {
-  "language": "en"
+  "language": "en",
+  "path_terms_of_service": "/!/public/terms-of-service.md",
+  "path_privacy_policy": "/!/public/privacy_policy.md",
+  "path_user_location": "/!/public/user_location.md"
 }

@@ -1,0 +1,18 @@
+.k-sign-up-step1-term-button {
+  width: 100%;
+  text-align: left;
+}
+
+.k-sign-up-step1-term-check {
+  margin: 16px;
+}
+
+.k-sign-up-step1-error {
+  margin: 0 8px;
+  font-size: 10px;
+  color: red;
+}
+
+.k-sign-up-step1-option {
+  font-size: 10px;
+}
