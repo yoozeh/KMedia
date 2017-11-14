@@ -1,6 +1,6 @@
-import { Component, Inject } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
-import { AppJSON, APP_TEXT } from './modules/app-services/app-services.module';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'k-root',
@@ -8,7 +8,21 @@ import { AppJSON, APP_TEXT } from './modules/app-services/app-services.module';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(@Inject(APP_TEXT) public text: AppJSON) {
-    console.log(text);
+  
+  @ViewChild(MatSidenav) sidenav;
+
+  onSidenav(event: string): void {
+    switch (event) {
+      case 'open':
+        this.sidenav.open();
+        break;
+      case 'close':
+        this.sidenav.close();
+        break;
+      case 'toggle':
+        this.sidenav.toggle();
+        break;
+    }
   }
+
 }

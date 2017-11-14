@@ -1,0 +1,20 @@
+.k-toolbar {
+  position: fixed;
+  z-index: 100;
+}
+
+.k-toolbar-menu {
+  min-width: 32px;
+  padding: 0 4px;
+}
+
+.k-toolbar-logo {
+  font-family: 'Lobster', cursive;
+  font-size: 24px;
+  cursor: default;
+}
+
+.k-toolbar-button {
+  min-width: 64px;
+  padding: 0 4px;
+}

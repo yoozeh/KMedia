@@ -1,0 +1,20 @@
+.k-sidenav-container {
+  min-height: 100vh;
+}
+
+.k-sidenav {
+  width: 240px;
+}
+
+.k-content {
+  margin: 0;
+  padding: 16px;
+  padding-top: 64px;
+  min-height: calc(100vh - 180px);
+}
+
+.k-footer {
+  margin: 0;
+  padding: 0;
+  height: 100px;
+}

@@ -1,0 +1,21 @@
+<div class="k-sidenav-header">
+  <span class="k-sidenav-logo">{{ text.logo_text }}</span>
+  <div fxFlex></div>
+  <button mat-icon-button>
+    <mat-icon>exit_to_app</mat-icon>
+  </button>
+</div>
+
+<k-user-profile></k-user-profile>
+
+<mat-nav-list>
+  <div>
+    test area
+  </div>
+  <div *ngFor="let menuGroup of menu">
+    <mat-divider></mat-divider>
+    <mat-list-item *ngFor="let item of menuGroup.items">
+      <a matLine>{{ item }}</a>
+    </mat-list-item>
+  </div>
+</mat-nav-list>

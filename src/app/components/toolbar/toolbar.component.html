@@ -1,0 +1,9 @@
+<mat-toolbar class="mat-elevation-z5 k-toolbar" color="primary">
+  <button mat-icon-button class="k-toolbar-menu" (click)="onClickMenu()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <a class="mat-button k-toolbar-logo" (click)="onClickLogo()">{{ text.logo_text }}</a>
+  <div fxFlex></div>
+  <button mat-button class="k-toolbar-button" (click)="onClickLogin()">{{ text.login }}</button>
+  <button mat-button class="k-toolbar-button" (click)="onClickJoin()">{{ text.join }}</button>
+</mat-toolbar>

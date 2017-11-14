@@ -1,0 +1,17 @@
+.k-user-profile {
+  padding: 8px;
+}
+
+.k-user-profile-pic {
+  width: 48px;
+  height: 48px;
+}
+
+.k-user-profile-nickname {
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.k-user-profile-account {
+  font-size: 12px;
+}
