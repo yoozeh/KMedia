@@ -19,7 +19,7 @@ export class TermsComponent implements OnInit {
 
   private _md = new md({
     html: true,
-    linkify: true,
+    //linkify: true,
     typographer: true
   });
 
