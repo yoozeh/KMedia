@@ -17,7 +17,28 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', express.static(path.resolve(__dirname, '../..', 'dist-app')));
-app.use('/!/public', express.static(path.resolve(__dirname, '../..', 'public')));
+
+app.get('/!/textfile/:target', (request, response) => {
+  response.sendFile(path.resolve(__dirname, '../..', 'public/' + request.params.target));
+});
+
+app.get('/!/check-email/:target', (request, response) => {
+  let result = false;
+  console.log(request.params);
+  const SAMPLE = [
+    'test1@email.test',
+    'krad@email.test'
+  ];
+  let temp = SAMPLE.findIndex((element) => {
+    return element === request.params.target;
+  });
+  console.log(temp);
+  if (temp !== -1) {
+    result = true;
+  }
+  response.send({ value: result });
+});
+
 app.all('*', (request, response) => {
   response.sendFile(path.resolve(__dirname, '../..', 'dist-app/index.html'));
 });

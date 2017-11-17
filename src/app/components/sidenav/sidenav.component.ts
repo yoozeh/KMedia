@@ -20,7 +20,9 @@ export class SidenavComponent implements OnInit {
 
   constructor(
     @Inject(APP_TEXT) public text: KJSON
-  ) {
+  ) { }
+
+  ngOnInit(): void {
     this._menu = [
       {
         title: "Menu Title 1",
@@ -48,7 +50,5 @@ export class SidenavComponent implements OnInit {
       }
     ];
   }
-
-  ngOnInit() { }
 
 }

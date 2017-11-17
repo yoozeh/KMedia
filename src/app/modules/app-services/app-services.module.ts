@@ -1,11 +1,16 @@
-import { NgModule, InjectionToken } from '@angular/core';
+import { NgModule, Injectable, Inject, InjectionToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { Observable } from 'rxjs';
+import { retry, debounceTime } from 'rxjs/operators';
 
 export interface KJSON {
   [key: string]: any;
 }
 
 export const APP_CONFIG = new InjectionToken<KJSON>('Configure');
+// export const APP_COUNTRY_CODE = new InjectionToken<KJSON>('Country code');
 export const APP_TEXT = new InjectionToken<KJSON>('Text');
 
 class AppStaticService {
@@ -22,14 +27,34 @@ class AppStaticService {
 
 }
 
+@Injectable()
+export class NetworkService {
+
+  constructor(
+    @Inject(APP_CONFIG) private _configure: KJSON,
+    private _http: HttpClient
+  ) { }
+
+  public request(request: string, target: string, data?:any): Observable<any> {
+    let url = this._configure.httpAddress + '/' + this._configure.path_request + '/' + request + '/';
+    switch (request.toLowerCase()) {
+      case 'textfile':
+        return this._http.get(url + target, { responseType: 'text' }).pipe(retry(3));
+      case 'check-email':
+        return this._http.get(url + target, { responseType: 'json' });
+    }
+    return null;
+  }
+}
+
 @NgModule({
   imports: [
     CommonModule
   ],
   providers: [
     { provide: APP_CONFIG, useValue: AppStaticService.configure },
-    { provide: APP_TEXT, useValue: AppStaticService.text }
-  ],
-  declarations: []
+    { provide: APP_TEXT, useValue: AppStaticService.text },
+    NetworkService,
+  ]
 })
 export class AppServicesModule { }

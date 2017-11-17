@@ -19,6 +19,7 @@ import {
   MatInputModule,
   MatListModule,
   MatMenuModule,
+  MatNativeDateModule,
   MatPaginatorModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
@@ -56,6 +57,7 @@ import {
     MatInputModule,
     MatListModule,
     MatMenuModule,
+    MatNativeDateModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
@@ -90,6 +92,7 @@ import {
     MatInputModule,
     MatListModule,
     MatMenuModule,
+    MatNativeDateModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
@@ -105,7 +108,6 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule
-  ],
-  declarations: []
+  ]
 })
 export class AngularMaterialModule { }

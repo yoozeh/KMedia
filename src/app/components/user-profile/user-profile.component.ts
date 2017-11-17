@@ -17,12 +17,12 @@ export class UserProfileComponent implements OnInit {
   private _picURL: string;
   get picURL(): string { return this._picURL; }
 
-  constructor() {
+  constructor() { }
+
+  ngOnInit(): void {
     this._nickname = 'Shiba Inu';
     this._account = 'shiba_inu';
     this._picURL = 'https://material.angular.io/assets/img/examples/shiba1.jpg';
   }
-
-  ngOnInit() { }
 
 }

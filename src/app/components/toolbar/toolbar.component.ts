@@ -18,7 +18,7 @@ export class ToolbarComponent implements OnInit {
     private _router: Router
   ) { }
 
-  ngOnInit() { }
+  ngOnInit(): void { }
 
   onClickMenu(): void {
     this.eventEmitter.emit('toggle');

@@ -2,10 +2,14 @@
   "title": "Knowledge Media",
   "logo_text": "Kmedia",
   "terms_of_service": "Terms of Service",
+  "file_terms_of_service": "terms-of-service.en.md",
   "privacy_policy": "Privacy Policy",
+  "file_privacy_policy": "privacy_policy.en.md",
   "user_location": "User Location",
+  "file_user_location": "user_location.en.md",
 
   "check_all": "Check All",
+  "require": "Require",
   "option": "Option",
   "prev": "Back",
   "next": "Next",
@@ -28,11 +32,54 @@
 
   "email": "Email",
   "email_placeholder": "Enter your email",
-  "email_message_error_require": "You must enter email address",
-  "email_message_error_valid": "Not a valid email",
+  "email_error": {
+    "valid": "Invalid",
+    "already": "Not already registered Email"
+  },
   "password": "Password",
   "password_placeholder": "Enter your password",
-  "password_message_error_require": "You must enter a password",
-  "password_message_error_minlength": "at least 8 charaters",
-  "login_submit": "Login"
+  "password_error": {
+    "minlength": "Minimum 8 letters",
+    "maxlength": "Maximum 24 letters",
+    "letter": "At least one letter",
+    "number": "At least one number",
+    "special": "At least one special character"
+  },
+  "confirm_password": "Confirm",
+  "confirm_password_placeholder": "Confirm your password",
+  "confirm_password_error": {
+    "confirm": "Confirm your password",
+    "password": "Check your password"
+  },
+  "nickname": "Nickname",
+  "nickname_error": {
+    "minlength": "Minimum 4 letters",
+    "maxlength": "Maximum 16 letters",
+    "start": "Start",
+    "letter": "Letter",
+    "already": "Not already in use"
+  },
+  "name": "Name",
+  "name_placeholder": "Enter your name",
+  "gender": "Gender",
+  "male": "Male",
+  "female": "Female",
+  "birth_date": "Birth date",
+  "year": "Year",
+  "month": "Month",
+  "day": "Day",
+  "months": [
+    { "text": "January", "count": 31 },
+    { "text": "February", "count": 29 },
+    { "text": "March", "count": 31 },
+    { "text": "April", "count": 30 },
+    { "text": "May", "count": 31 },
+    { "text": "June", "count": 30 },
+    { "text": "July", "count": 31 },
+    { "text": "August", "count": 31 },
+    { "text": "September", "count": 30 },
+    { "text": "October", "count": 31 },
+    { "text": "November", "count": 30 },
+    { "text": "December", "count": 31 }
+  ]
 }
