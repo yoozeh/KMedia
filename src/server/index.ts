@@ -24,16 +24,23 @@ app.get('/!/textfile/:target', (request, response) => {
 
 app.get('/!/check-email/:target', (request, response) => {
   let result = false;
-  console.log(request.params);
   const SAMPLE = [
     'test1@email.test',
     'krad@email.test'
   ];
-  let temp = SAMPLE.findIndex((element) => {
-    return element === request.params.target;
-  });
-  console.log(temp);
-  if (temp !== -1) {
+  if (SAMPLE.findIndex((element) => { return element === request.params.target }) !== -1) {
+    result = true;
+  }
+  response.send({ value: result });
+});
+
+app.get('/!/check-nickname/:target', (request, response) => {
+  let result = false;
+  const SAMPLE = [
+    'krad',
+    'yoozeh'
+  ];
+  if (SAMPLE.findIndex((element) => { return element === request.params.target }) !== -1) {
     result = true;
   }
   response.send({ value: result });

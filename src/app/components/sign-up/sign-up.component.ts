@@ -44,68 +44,70 @@ export class SignUpComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
-    this.step1 = this._formBuilder.group(
-      {
-        checkAll: '',
-        checkTOS: ['', Validators.required],
-        checkPP: ['', Validators.required],
-        checkUL: ''
-      }
-    );
-    this.step2 = this._formBuilder.group(
-      {
-        email: ['', [Validators.required, Validators.email]],
-        password: ['',
-          [
-            Validators.required,
-            Validators.minLength(8),
-            Validators.maxLength(24),
-            this._validatePassword()
-          ]
-        ],
-        confirm: ['',
-          [
-            Validators.required,
-            this._validateConfirmPassword()
-          ]
+    this.step1 = this._formBuilder.group({
+      checkAll: '',
+      checkTOS: ['', Validators.required],
+      checkPP: ['', Validators.required],
+      checkUL: ''
+    });
+    this.step2 = this._formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(24),
+          this._validatePassword()
         ]
-      }
-    );
-    this.step3 = this._formBuilder.group(
-      {
-        nickname: ['',
-          [
-            Validators.required,
-            Validators.minLength(4),
-            Validators.maxLength(16),
-            this._validateNickname()
-          ]
-        ],
-        name: '',
-        gender: '',
-        birthDate: ''
-      }
-    );
-    console.log(this.step2.controls.email);
+      ],
+      confirm: ['',
+        [
+          Validators.required,
+          this._validateConfirmPassword()
+        ]
+      ]
+    });
+    this.step3 = this._formBuilder.group({
+      nickname: ['',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(16),
+          this._validateNickname()
+        ]
+      ],
+      name: '',
+      gender: '',
+      birthDate: ''
+    });
     this.step2.controls.email.valueChanges
-      .pipe(debounceTime(500))
+      .pipe(debounceTime(1000))
       .subscribe((value) => {
-        if (value.length === 0) {
-          this.step2.controls.email.setErrors({ 'required': true, 'email': true });
-        } else if (value.length > 0 && this.step2.controls.email.valid) {
+        if (value.length > 0 && this.step2.controls.email.valid) {
           this._network.request('check-email', value).subscribe(
             (response) => {
-              console.log(response);
               if (response.value) {
                 this.step2.controls.email.setErrors({ 'already': true });
-              } else {
-                this.step2.controls.email.setErrors({});
               }
             },
             (error) => { console.log(error) }
           );
         }
-        console.log(this.step2.controls.email);
+      });
+    this.step3.controls.nickname.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe((value) => {
+        if (value.length > 0 && this.step3.controls.nickname.valid) {
+          this._network.request('check-nickname', value).subscribe(
+            (response) => {
+              console.log(response);
+              if (response.value) {
+                this.step3.controls.nickname.setErrors({ 'already': true });
+              }
+            },
+            (error) => { console.log(error) }
+          );
+        }
       });
   }
   private _temp: {} = null;
@@ -192,6 +194,8 @@ export class SignUpComponent implements OnInit {
         return !(this.step3.controls.nickname.hasError('start'));
       case 'letter':
         return !(this.step3.controls.nickname.hasError('letter'));
+      case 'already':
+        return !(this.step3.controls.nickname.hasError('already') || this.step3.value.nickname.length === 0);
     }
     return true;
   }

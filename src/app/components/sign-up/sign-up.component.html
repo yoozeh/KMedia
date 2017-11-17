@@ -2,7 +2,7 @@
   <div class="k-sign-up-container">
     <h1>{{ text.sign_up }}</h1>
     <mat-card>
-      <mat-vertical-stepper>
+      <mat-vertical-stepper linear>
 
         <!-- Sign up Step 1 -->
         <mat-step [stepControl]="step1">
@@ -153,7 +153,7 @@
                       {{ text.nickname_error.letter }}
                     </div>
                     <div class="k-sign-up-message-item" [class]="checkNickname('already') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
-                      <mat-icon>{{ checkPassword('already') ? 'done' : 'block' }}</mat-icon>
+                      <mat-icon>{{ checkNickname('already') ? 'done' : 'block' }}</mat-icon>
                       {{ text.nickname_error.already }}
                     </div>
                   </mat-hint>

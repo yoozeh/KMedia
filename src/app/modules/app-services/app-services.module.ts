@@ -35,12 +35,14 @@ export class NetworkService {
     private _http: HttpClient
   ) { }
 
-  public request(request: string, target: string, data?:any): Observable<any> {
+  public request(request: string, target: string, data?: any): Observable<any> {
     let url = this._configure.httpAddress + '/' + this._configure.path_request + '/' + request + '/';
     switch (request.toLowerCase()) {
       case 'textfile':
         return this._http.get(url + target, { responseType: 'text' }).pipe(retry(3));
       case 'check-email':
+        return this._http.get(url + target, { responseType: 'json' });
+      case 'check-nickname':
         return this._http.get(url + target, { responseType: 'json' });
     }
     return null;
