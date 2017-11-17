@@ -15,7 +15,7 @@
     "e2e": "ng e2e",
     "buildapp": "ng build",
     "buildserver": "tsc -p tsconfig-server.json",
-    "postinstall": "yarn buildserver && NODE_ENV=development yarn buildapp --aot --prod",
+    "postinstall": "yarn buildserver && NODE_ENV=development NPM_CONFIG_PRODUCTION=false yarn buildapp --aot --prod",
     "localbuild": "yarn buildserver && yarn buildapp",
     "localstart": "node dist-server/server/index.js",
     "watchserver": "nodemon dist-server/server/index.js",
