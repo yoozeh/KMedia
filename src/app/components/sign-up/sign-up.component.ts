@@ -100,7 +100,6 @@ export class SignUpComponent implements OnInit {
         if (value.length > 0 && this.step3.controls.nickname.valid) {
           this._network.request('check-nickname', value).subscribe(
             (response) => {
-              console.log(response);
               if (response.value) {
                 this.step3.controls.nickname.setErrors({ 'already': true });
               }
@@ -109,12 +108,6 @@ export class SignUpComponent implements OnInit {
           );
         }
       });
-  }
-  private _temp: {} = null;
-  private _validateEmail(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
-      return this._temp;
-    };
   }
 
   private _validatePassword(): ValidatorFn {
