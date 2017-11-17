@@ -25,6 +25,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cli": "^1.5.2",
     "@types/node": "^8.0.53",
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
@@ -36,7 +37,6 @@
   "devDependencies": {
     "@angular/animations": "^5.0.2",
     "@angular/cdk": "^5.0.0-rc0",
-    "@angular/cli": "^1.5.2",
     "@angular/common": "^5.0.2",
     "@angular/compiler": "^5.0.2",
     "@angular/compiler-cli": "^5.0.2",
