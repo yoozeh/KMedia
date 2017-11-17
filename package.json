@@ -14,7 +14,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "buildapp": "ng build",
-    "buildappheroku": "NODE_ENV=development NPM_CONFIG_PRODUCTION=false ng build --aot --prod",
+    "buildappheroku": "NODE_ENV=development, NPM_CONFIG_PRODUCTION=false ng build --aot --prod",
     "buildserver": "tsc -p tsconfig-server.json",
     "postinstall": "yarn buildserver && yarn buildappheroku",
     "localbuild": "yarn buildserver && yarn buildapp",
