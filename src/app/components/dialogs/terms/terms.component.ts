@@ -8,7 +8,7 @@ import * as md from 'markdown-it';
   selector: 'k-terms',
   templateUrl: './terms.component.html',
   styleUrls: ['./terms.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class TermsComponent implements OnInit {
 

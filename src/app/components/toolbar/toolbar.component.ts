@@ -7,7 +7,7 @@ import { KJSON, APP_TEXT } from '../../modules/app-services/app-services.module'
   selector: 'k-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class ToolbarComponent implements OnInit {
 

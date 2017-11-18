@@ -1,8 +1,8 @@
 <div fxLayoutAlign="center start">
-  <div class="k-sign-up-container">
+  <div class="container">
     <h1>{{ text.sign_up }}</h1>
     <mat-card>
-      <mat-vertical-stepper linear>
+      <mat-vertical-stepper>
 
         <!-- Sign up Step 1 -->
         <mat-step [stepControl]="step1">
@@ -10,37 +10,38 @@
             {{ text.sign_up_step1 }}: {{ text.sign_up_step1_title }}
           </ng-template>
           <form [formGroup]="step1" novalidate>
-            <div ngClass.xs="k-sign-up-container-step-xs" ngClass.gt-xs="k-sign-up-container-step">
+            <div ngClass.xs="container-step-xs" ngClass.gt-xs="container-step">
 
-              <div class="k-sign-up-row" fxLayout="row">
+              <div class="sign-up-row" fxLayout="row">
                 <mat-checkbox formControlName="checkAll" (change)="onStep1CheckAll()">{{ text.check_all }}</mat-checkbox>
               </div>
 
-              <div class="k-sign-up-row" fxLayout="row" fxLayoutAlign="start center">
-                <label class="k-sign-up-step1-error">
-                  <p>* {{ text.sign_up_step1_error }}</p>
-                </label>
+              <div class="sign-up-row" fxLayout="row" fxLayoutAlign="start center">
+                <mat-error [class]="'message-agreement ' + (checkAgreement() ? 'message-done' : 'message-error')" fxFill fxLayoutAlign="start center">
+                  <mat-icon class="message-agreement">{{ checkAgreement() ? 'done' : 'block' }}</mat-icon>
+                  {{ text.sign_up_step1_error }}
+                </mat-error>
               </div>
 
-              <div class="k-sign-up-row" fxLayout="row" fxLayoutAlign="center center">
+              <div class="sign-up-row" fxLayout="row" fxLayoutAlign="center center">
                 <div fxFlex>
-                  <button mat-button class="k-sign-up-step1-term-button" (click)="openStep1TermsDialog(1)">{{ text.terms_of_service }}</button>
+                  <button mat-button class="button-term" (click)="openStep1TermsDialog(1)">{{ text.terms_of_service }}</button>
                 </div>
                 <mat-checkbox formControlName="checkTOS" (change)="onStep1Check()" required></mat-checkbox>
               </div>
 
-              <div class="k-sign-up-row" fxLayout="row" fxLayoutAlign="center center">
+              <div class="sign-up-row" fxLayout="row" fxLayoutAlign="center center">
                 <div fxFlex>
-                  <button mat-button class="k-sign-up-step1-term-button" (click)="openStep1TermsDialog(2)">{{ text.privacy_policy }}</button>
+                  <button mat-button class="button-term" (click)="openStep1TermsDialog(2)">{{ text.privacy_policy }}</button>
                 </div>
                 <mat-checkbox formControlName="checkPP" (change)="onStep1Check()" required></mat-checkbox>
               </div>
 
-              <div class="k-sign-up-row" fxLayout="row" fxLayoutAlign="center center">
+              <div class="sign-up-row" fxLayout="row" fxLayoutAlign="center center">
                 <div fxFlex>
-                  <button mat-button class="k-sign-up-step1-term-button" (click)="openStep1TermsDialog(3)">
+                  <button mat-button class="button-term" (click)="openStep1TermsDialog(3)">
                     {{ text.user_location }}
-                    <span class="k-sign-up-step1-option">({{ text.option }})</span>
+                    <span class="text-option">({{ text.option }})</span>
                   </button>
                 </div>
                 <mat-checkbox formControlName="checkUL" (change)="onStep1Check()"></mat-checkbox>
@@ -60,10 +61,10 @@
             {{ text.sign_up_step2 }}: {{ text.sign_up_step2_title }}
           </ng-template>
           <form [formGroup]="step2" novalidate>
-            <div ngClass.xs="k-sign-up-container-step-xs" ngClass.gt-xs="k-sign-up-container-step">
+            <div ngClass.xs="container-step-xs" ngClass.gt-xs="container-step">
 
-              <div class="k-sign-up-row" fxLayout="row">
-                <label class="k-sign-up-input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.email }}</label>
+              <div class="sign-up-row" fxLayout="row">
+                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.email }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="email" placeholder="{{ text.email_placeholder }}" required>
                   <mat-error *ngIf="step2.controls.email.hasError('required')">{{ text.require }}</mat-error>
@@ -72,29 +73,29 @@
                 </mat-form-field>
               </div>
 
-              <div class="k-sign-up-row k-sign-up-step2-password" fxLayout="row">
-                <label class="k-sign-up-input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.password }}</label>
+              <div class="sign-up-row include-message" fxLayout="row">
+                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.password }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="password" placeholder="{{ text.password_placeholder }}" [type]="isHidePassword ? 'password' : 'text'"
                     required>
                   <mat-hint fxLayout="column">
-                    <div class="k-sign-up-message-item" [class]="checkPassword('minlength') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
+                    <div [class]="checkPassword('minlength') ? 'message-done' : 'message-error'">
                       <mat-icon>{{ checkPassword('minlength') ? 'done' : 'block' }}</mat-icon>
                       {{ text.password_error.minlength }}
                     </div>
-                    <div class="k-sign-up-message-item" [class]="checkPassword('maxlength') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
+                    <div [class]="checkPassword('maxlength') ? 'message-done' : 'message-error'">
                       <mat-icon>{{ checkPassword('maxlength') ? 'done' : 'block' }}</mat-icon>
                       {{ text.password_error.maxlength }}
                     </div>
-                    <div class="k-sign-up-message-item" [class]="checkPassword('letter') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
+                    <div [class]="checkPassword('letter') ? 'message-done' : 'message-error'">
                       <mat-icon>{{ checkPassword('letter') ? 'done' : 'block' }}</mat-icon>
                       {{ text.password_error.letter }}
                     </div>
-                    <div class="k-sign-up-message-item" [class]="checkPassword('number') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
+                    <div [class]="checkPassword('number') ? 'message-done' : 'message-error'">
                       <mat-icon>{{ checkPassword('number') ? 'done' : 'block' }}</mat-icon>
                       {{ text.password_error.number }}
                     </div>
-                    <div class="k-sign-up-message-item" [class]="checkPassword('special') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
+                    <div [class]="checkPassword('special') ? 'message-done' : 'message-error'">
                       <mat-icon>{{ checkPassword('special') ? 'done' : 'block' }}</mat-icon>
                       {{ text.password_error.special }}
                     </div>
@@ -102,8 +103,8 @@
                 </mat-form-field>
               </div>
 
-              <div class="k-sign-up-row" fxLayout="row">
-                <label class="k-sign-up-input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.confirm_password }}</label>
+              <div class="sign-up-row" fxLayout="row">
+                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.confirm_password }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="confirm" placeholder="{{ text.confirm_password_placeholder }}" [type]="isHidePassword ? 'password' : 'text'"
                     required>
@@ -129,30 +130,31 @@
             {{ text.sign_up_step3 }}: {{ text.sign_up_step3_title }}
           </ng-template>
           <form [formGroup]="step3" novalidate>
-            <div ngClass.xs="k-sign-up-container-step-xs" ngClass.gt-xs="k-sign-up-container-step">
+            <div ngClass.xs="container-step-xs" ngClass.gt-xs="container-step">
 
-              <div class="k-sign-up-row k-sign-up-step3-nickname" fxLayout="row">
-                <label class="k-sign-up-input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.nickname }}</label>
+              <div class="sign-up-row include-message" fxLayout="row">
+                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.nickname }}</label>
                 <mat-form-field fxFlex>
+                  <span matPrefix>@</span>
                   <input matInput formControlName="nickname" placeholder="{{ text.nickname_placeholder }}" required>
                   <mat-hint fxLayout="column">
-                    <div class="k-sign-up-message-item" [class]="checkNickname('minlength') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
+                    <div [class]="checkNickname('minlength') ? 'message-done' : 'message-error'">
                       <mat-icon>{{ checkNickname('minlength') ? 'done' : 'block' }}</mat-icon>
                       {{ text.nickname_error.minlength }}
                     </div>
-                    <div class="k-sign-up-message-item" [class]="checkNickname('maxlength') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
+                    <div [class]="checkNickname('maxlength') ? 'message-done' : 'message-error'">
                       <mat-icon>{{ checkNickname('maxlength') ? 'done' : 'block' }}</mat-icon>
                       {{ text.nickname_error.maxlength }}
                     </div>
-                    <div class="k-sign-up-message-item" [class]="checkNickname('start') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
+                    <div [class]="checkNickname('start') ? 'message-done' : 'message-error'">
                       <mat-icon>{{ checkNickname('start') ? 'done' : 'block' }}</mat-icon>
                       {{ text.nickname_error.start }}
                     </div>
-                    <div class="k-sign-up-message-item" [class]="checkNickname('letter') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
+                    <div [class]="checkNickname('letter') ? 'message-done' : 'message-error'">
                       <mat-icon>{{ checkNickname('letter') ? 'done' : 'block' }}</mat-icon>
                       {{ text.nickname_error.letter }}
                     </div>
-                    <div class="k-sign-up-message-item" [class]="checkNickname('already') ? 'k-sign-up-message-done' : 'k-sign-up-message-error'">
+                    <div [class]="checkNickname('already') ? 'message-done' : 'message-error'">
                       <mat-icon>{{ checkNickname('already') ? 'done' : 'block' }}</mat-icon>
                       {{ text.nickname_error.already }}
                     </div>
@@ -160,23 +162,23 @@
                 </mat-form-field>
               </div>
 
-              <div class="k-sign-up-row" fxLayout="row">
-                <label class="k-sign-up-input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.name }}</label>
+              <div class="sign-up-row" fxLayout="row">
+                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.name }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="name" placeholder="{{ text.name_placeholder }}">
                 </mat-form-field>
               </div>
 
-              <div class="k-sign-up-row k-sign-up-step3-gender" fxLayout="row" fxLayoutAlign="start center">
-                <label class="k-sign-up-input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.gender }}</label>
+              <div class="sign-up-row container-gender" fxLayout="row" fxLayoutAlign="start center">
+                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.gender }}</label>
                 <mat-radio-group formControlName="gender" fxFlex fxLayoutAlign.xs="space-around center">
                   <mat-radio-button value="male" fxFlex="120px">{{ text.male }}</mat-radio-button>
                   <mat-radio-button value="female" fxFlex="120px">{{ text.female }}</mat-radio-button>
                 </mat-radio-group>
               </div>
 
-              <div class="k-sign-up-row" fxLayout="row">
-                <label class="k-sign-up-input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.birth_date }}</label>
+              <div class="sign-up-row" fxLayout="row">
+                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.birth_date }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="birthDate" [matDatepicker]="picker" placeholder="Choose a date">
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -198,7 +200,7 @@
           <ng-template matStepLabel>
             {{ text.sign_up_step4 }}: {{ text.sign_up_step4_title }}
           </ng-template>
-          <div ngClass.xs="k-sign-up-container-step-xs" ngClass.gt-xs="k-sign-up-container-step">
+          <div ngClass.xs="container-step-xs" ngClass.gt-xs="container-step">
 
             Content 4
 
@@ -206,7 +208,7 @@
 
           <div fxLayout="row" fxLayoutAlign="end center">
             <button mat-button matStepperPrevious>{{ text.prev }}</button>
-            <button mat-button type="submit" (click)="onSubmit()">{{ text.done }}</button>
+            <button mat-button type="submit" (click)="onSubmit()" [disabled]="step1.invalid || step2.invalid || step3.invalid">{{ text.done }}</button>
           </div>
         </mat-step>
 

@@ -1,63 +1,53 @@
-.k-sign-up-container {
+.container {
   width: 100%;
   max-width: 800px;
   align-self: center;
 }
 
-.k-sign-up-container-step {
+.container-step {
   padding: 24px;
   padding-top: 8px;
 }
 
-.k-sign-up-container-step-xs {
+.container-step-xs {
   padding: 0px;
   padding-top: 8px;
   padding-bottom: 24px;
 }
 
-.k-sign-up-input-label {
-  padding-right: 16px;
-}
-
-.k-sign-up-message-item {
-  font-weight: bold;
-}
-
-.k-sign-up-message-done {
-  color: green;
-}
-
-.k-sign-up-message-error {
-  color: #f44336;
-}
-
-.k-sign-up-row {
+.sign-up-row {
   padding: 8px 0;
 }
 
-.k-sign-up-step1-term-button {
+.message-done {
+  color: green;
+}
+
+.message-error {
+  color: #f44336;
+}
+
+.message-agreement {
+  font-size: 12px;
+}
+
+.input-label {
+  padding-right: 16px;
+}
+
+.button-term {
   width: 100%;
   text-align: left;
 }
 
-.k-sign-up-step1-error {
-  margin: 0 8px;
-  font-size: 10px;
-  color: red;
-}
-
-.k-sign-up-step1-option {
+.text-option {
   font-size: 10px;
 }
 
-.k-sign-up-step2-password {
+.include-message {
   margin-bottom: 48px;
 }
 
-.k-sign-up-step3-nickname {
-  margin-bottom: 48px;
-}
-
-.k-sign-up-step3-gender {
+.container-gender {
   height: 80px;
 }

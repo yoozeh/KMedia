@@ -4,7 +4,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   selector: 'k-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class FooterComponent implements OnInit {
 

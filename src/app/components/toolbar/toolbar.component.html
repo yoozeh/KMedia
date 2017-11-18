@@ -1,11 +1,11 @@
-<mat-toolbar class="mat-elevation-z5 k-toolbar" color="primary">
-  <button mat-icon-button class="k-toolbar-menu" (click)="onClickMenu()">
+<mat-toolbar class="mat-elevation-z5 container" color="primary">
+  <button mat-icon-button class="button-menu" (click)="onClickMenu()">
     <mat-icon>menu</mat-icon>
   </button>
-  <a class="mat-button k-toolbar-logo" (click)="onClickLogo()">{{ text.logo_text }}</a>
+  <a class="mat-button logo" (click)="onClickLogo()">{{ text.logo_text }}</a>
   <div fxFlex fxLayoutAlign="end center">
-    <input type="search" class="k-toolbar-search" placeholder="Search" fxHide.lt-sm>
+    <input type="search" class="input-search" placeholder="Search" fxHide.lt-sm>
   </div>
-  <button mat-button class="k-toolbar-button" (click)="onClickLogin()">{{ text.sign_in }}</button>
-  <button mat-button class="k-toolbar-button" (click)="onClickJoin()">{{ text.sign_up }}</button>
+  <button mat-button class="button" (click)="onClickLogin()">{{ text.sign_in }}</button>
+  <button mat-button class="button" (click)="onClickJoin()">{{ text.sign_up }}</button>
 </mat-toolbar>

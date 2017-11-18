@@ -1,11 +1,15 @@
-.k-sidenav-logo {
+.header {
+  background-color: lightgray;
+}
+
+.logo {
   margin: auto 16px;
   font-family: Lobster, cursive;
   font-size: 18px;
   cursor: default;
 }
 
-.k-sidenav-menu-title {
+.menu-title {
   display: block;
   border: none;
   font-size: 10px;

@@ -18,8 +18,8 @@
 
   "sign_up": "Sign Up",
   "sign_up_step1": "Step 1",
-  "sign_up_step1_title": "Terms",
-  "sign_up_step1_error": "Please indicate that you have read and agree to the Terms of Service, Privacy Policy and User Location agreement",
+  "sign_up_step1_title": "Agreement",
+  "sign_up_step1_error": "Please indicate that you have read and agree to the Terms of Service, and Privacy Policy (and User Location agreement optionally)",
   "sign_up_step2": "Step 2",
   "sign_up_step2_title": "Account",
   "sign_up_step3": "Step 3",
@@ -52,11 +52,12 @@
     "password": "Check your password"
   },
   "nickname": "Nickname",
+  "nickname_placeholder": "Enter nickname",
   "nickname_error": {
     "minlength": "Minimum 4 letters",
     "maxlength": "Maximum 16 letters",
-    "start": "Start",
-    "letter": "Letter",
+    "start": "Must start a-Z, A-Z, 0-9, _",
+    "letter": "Only use a-Z, A-Z, 0-9, _, .",
     "already": "Not already in use"
   },
   "name": "Name",

@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA } from '@angular/material';
   selector: 'k-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class DialogComponent implements OnInit {
 

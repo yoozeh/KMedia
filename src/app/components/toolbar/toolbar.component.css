@@ -1,20 +1,20 @@
-.k-toolbar {
+.container {
   position: fixed;
   z-index: 100;
 }
 
-.k-toolbar-menu {
+.button-menu {
   min-width: 32px;
   padding: 0 4px;
 }
 
-.k-toolbar-logo {
+.logo {
   font-family: 'Lobster', cursive;
   font-size: 24px;
   cursor: default;
 }
 
-.k-toolbar-search{
+.input-search {
   margin: 0em;
   margin-left: 64px;
   margin-right: 8px;
@@ -30,8 +30,8 @@
   font: 14px Arial;
 }
 
-.k-toolbar-button {
-  margin: 0 2px !important;
-  padding: 0 !important;
-  min-width: 72px !important;
+.button {
+  margin: 0 2px;
+  padding: 0;
+  min-width: 72px;
 }

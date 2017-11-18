@@ -11,7 +11,7 @@ interface MenuList {
   selector: 'k-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class SidenavComponent implements OnInit {
 

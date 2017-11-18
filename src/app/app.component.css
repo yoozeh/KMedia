@@ -1,8 +1,8 @@
-.k-sidenav {
+.sidenav {
   width: 240px;
 }
 
-.k-content {
+.content {
   margin: 0;
   padding: 16px;
   padding-top: 64px;
@@ -12,7 +12,7 @@
   min-height: calc(100vh - 112px);
 }
 
-.k-footer {
+.footer {
   margin: 0;
   padding: 0;
   height: 32px;

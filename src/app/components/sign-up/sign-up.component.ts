@@ -26,7 +26,7 @@ const patternNickname = /(^[a-zA-Z\d\_\.]+$)/;
   selector: 'k-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class SignUpComponent implements OnInit {
 
@@ -159,6 +159,10 @@ export class SignUpComponent implements OnInit {
       }
       return result;
     };
+  }
+
+  public checkAgreement(): boolean {
+    return this.step1.value.checkTOS && this.step1.value.checkPP;
   }
 
   public checkPassword(target: string): boolean {
