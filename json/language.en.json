@@ -33,8 +33,8 @@
   "email": "Email",
   "email_placeholder": "Enter your email",
   "email_error": {
-    "valid": "Invalid",
-    "already": "Not already registered Email"
+    "invalid": "Invalid Email address",
+    "already": "Already registered Email address"
   },
   "password": "Password",
   "password_placeholder": "Enter your password",
@@ -48,16 +48,16 @@
   "confirm_password": "Confirm",
   "confirm_password_placeholder": "Confirm your password",
   "confirm_password_error": {
-    "confirm": "Confirm your password",
-    "password": "Check your password"
+    "confirm": "Not equal to password",
+    "password": "Invalid password"
   },
   "nickname": "Nickname",
   "nickname_placeholder": "Enter nickname",
   "nickname_error": {
     "minlength": "Minimum 4 letters",
     "maxlength": "Maximum 16 letters",
-    "start": "Must start a-Z, A-Z, 0-9, _",
-    "letter": "Only use a-Z, A-Z, 0-9, _, .",
+    "start": "Must start alphabet, number, or underbar",
+    "letter": "Only use alphabet, number, underbar, dot, and !",
     "already": "Not already in use"
   },
   "name": "Name",
@@ -65,7 +65,7 @@
   "gender": "Gender",
   "male": "Male",
   "female": "Female",
-  "birth_date": "Birth date",
+  "birth_date": "Birth Date",
   "year": "Year",
   "month": "Month",
   "day": "Day",

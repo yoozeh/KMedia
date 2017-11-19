@@ -9,13 +9,20 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 export class UserProfileComponent implements OnInit {
 
   private _nickname: string;
-  get nickname(): string { return this._nickname; }
+  get nickname(): string {
+    return this._nickname;
+  }
 
   private _account: string;
-  get account(): string { return this._account; }
+  get account(): string {
+    return this._account;
+  }
 
   private _picURL: string;
-  get picURL(): string { return this._picURL; }
+  get picURL(): string {
+    return this._picURL;
+  }
+
 
   constructor() { }
 

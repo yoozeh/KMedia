@@ -16,7 +16,9 @@ interface MenuList {
 export class SidenavComponent implements OnInit {
 
   private _menu: Array<MenuList>;
-  get menu(): Array<MenuList> { return this._menu; }
+  get menu(): Array<MenuList> {
+    return this._menu;
+  }
 
   constructor(
     @Inject(APP_TEXT) public text: KJSON

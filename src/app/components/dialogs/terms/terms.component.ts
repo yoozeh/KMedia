@@ -15,15 +15,21 @@ export class TermsComponent implements OnInit {
   @Input() public index: number;
 
   private _md: md;
-
+  
   private _isLoading: boolean = true;
-  get isLoading(): boolean { return this._isLoading; }
+  get isLoading(): boolean {
+    return this._isLoading;
+  }
 
   private _title: string;
-  get title(): string { return this._title; }
+  get title(): string {
+    return this._title;
+  }
 
   private _contents: string;
-  get contents(): string { return this._contents; }
+  get contents(): string {
+    return this._contents;
+  }
 
   constructor(
     @Inject(APP_TEXT) public text: KJSON,

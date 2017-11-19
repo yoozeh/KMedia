@@ -9,18 +9,15 @@ import {
 } from '@angular/forms';
 import { MatDialog, MatSelect } from '@angular/material';
 
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, startWith, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { KJSON, APP_TEXT, NetworkService } from '../../modules/app-services/app-services.module';
 
 import { DialogComponent } from '../dialog/dialog.component';
 
-const patternLetter = /([A-Za-z])/;
-const patternNumber = /([\d])/;
-const patternSpecial = /([\`\~\!\@\#\$\%\^\&\*\(\)\-\_\=\+\\\|\[\{\]\}\;\:\'\"\,\<\.\>\/\?])/;
-
-const patternNicknameStart = /(^[a-zA-Z\d\_])/;
-const patternNickname = /(^[a-zA-Z\d\_\.]+$)/;
+import { KRegExp } from '../../../common/k-reg-exp';
+import { KUser } from '../../../common/k-user';
 
 @Component({
   selector: 'k-sign-up',
@@ -35,6 +32,19 @@ export class SignUpComponent implements OnInit {
   public step3: FormGroup;
 
   public isHidePassword: boolean = true;
+
+  public filteredYear: Observable<string[]>;
+  public filteredMonth: Observable<string[]>;
+  public filteredDay: Observable<string[]>;
+
+  private thisYear = new Date().getFullYear();
+  private _listYear = Array.from({ length: this.thisYear - 1900 + 1 },
+    (_, key) => (this.thisYear - key).toString());
+  private _listMonth = Array.from({ length: 12 },
+    (_, key) => (key + 1).toString());
+  private _listDay = Array.from({ length: 31 },
+    (_, key) => (key + 1).toString());
+
 
   constructor(
     @Inject(APP_TEXT) public text: KJSON,
@@ -51,7 +61,7 @@ export class SignUpComponent implements OnInit {
       checkUL: ''
     });
     this.step2 = this._formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, this._validateEmail()]],
       password: ['',
         [
           Validators.required,
@@ -60,12 +70,7 @@ export class SignUpComponent implements OnInit {
           this._validatePassword()
         ]
       ],
-      confirm: ['',
-        [
-          Validators.required,
-          this._validateConfirmPassword()
-        ]
-      ]
+      confirm: ['', [Validators.required, this._validateConfirmPassword()]]
     });
     this.step3 = this._formBuilder.group({
       nickname: ['',
@@ -78,10 +83,12 @@ export class SignUpComponent implements OnInit {
       ],
       name: '',
       gender: '',
-      birthDate: ''
+      year: '',
+      month: '',
+      day: ''
     });
     this.step2.controls.email.valueChanges
-      .pipe(debounceTime(1000))
+      .pipe(debounceTime(800))
       .subscribe((value) => {
         if (value.length > 0 && this.step2.controls.email.valid) {
           this._network.request('check-email', value).subscribe(
@@ -95,7 +102,7 @@ export class SignUpComponent implements OnInit {
         }
       });
     this.step3.controls.nickname.valueChanges
-      .pipe(debounceTime(1000))
+      .pipe(debounceTime(800))
       .subscribe((value) => {
         if (value.length > 0 && this.step3.controls.nickname.valid) {
           this._network.request('check-nickname', value).subscribe(
@@ -108,20 +115,112 @@ export class SignUpComponent implements OnInit {
           );
         }
       });
+    this.step3.controls.year.valueChanges
+      .subscribe((value) => {
+        let yearLength: number = this.step3.controls.year.value.length;
+        let monthLength: number = this.step3.controls.month.value.length;
+        let dayLength: number = this.step3.controls.day.value.length;
+        let lamda = (value) => { return value === this.step3.controls.year.value; };
+        if (this._listYear.findIndex(lamda) === -1) {
+          this.step3.controls.year.setErrors({ 'year': true });
+        }
+        if (yearLength === 0 && (monthLength > 0 || dayLength > 0)) {
+          this.step3.controls.year.setErrors({ 'necessary': true });
+        }
+        if (yearLength > 0) {
+          if (monthLength === 0) {
+            this.step3.controls.month.setErrors({ 'necessary': true });
+            this.step3.controls.month.updateValueAndValidity();
+          }
+          if (dayLength === 0) {
+            this.step3.controls.day.setErrors({ 'necessary': true });
+            this.step3.controls.day.updateValueAndValidity();
+          }
+        }
+      });
+    this.step3.controls.month.valueChanges
+      .subscribe((value) => {
+        let yearLength: number = this.step3.controls.year.value.length;
+        let monthLength: number = this.step3.controls.month.value.length;
+        let dayLength: number = this.step3.controls.day.value.length;
+        let month = Number(this.step3.controls.month.value);
+        if (month < 1 || month > 12) {
+          this.step3.controls.month.setErrors({ 'year': true });
+        }
+        if (monthLength === 0 && (yearLength > 0 || dayLength > 0)) {
+          let value = { 'necessary': true };
+        }
+        if (monthLength > 0) {
+          if (yearLength === 0) {
+            this.step3.controls.year.setErrors({ 'necessary': true });
+            this.step3.controls.year.updateValueAndValidity();
+          }
+          if (dayLength === 0) {
+            this.step3.controls.day.setErrors({ 'necessary': true });
+            this.step3.controls.day.updateValueAndValidity();
+          }
+        }
+      });
+    this.step3.controls.day.valueChanges
+      .subscribe((value) => {
+        let yearLength: number = this.step3.controls.year.value.length;
+        let monthLength: number = this.step3.controls.month.value.length;
+        let dayLength: number = this.step3.controls.day.value.length;
+        let day = Number(this.step3.controls.day.value);
+        let lastDay = 31;
+        if (day < 1 || day > lastDay) {
+          this.step3.controls.day.setErrors({ 'year': true });
+        }
+        if (dayLength === 0 && (yearLength > 0 || monthLength > 0)) {
+          let value = { 'necessary': true };
+        }
+        if (dayLength > 0) {
+          if (yearLength === 0) {
+            this.step3.controls.year.setErrors({ 'necessary': true });
+            this.step3.controls.year.updateValueAndValidity();
+          }
+          if (monthLength === 0) {
+            this.step3.controls.month.setErrors({ 'necessary': true });
+            this.step3.controls.month.updateValueAndValidity();
+          }
+        }
+      });
+    this.filteredYear = this.step3.controls.year.valueChanges
+      .pipe(debounceTime(400), startWith(null), map((value) => {
+        return value ? this._filterString(value, this._listYear) : this._listYear.slice()
+      }))
+    this.filteredMonth = this.step3.controls.month.valueChanges
+      .pipe(debounceTime(400), startWith(null), map((value) => {
+        return value ? this._filterString(value, this._listMonth) : this._listMonth.slice()
+      }));
+    this.filteredDay = this.step3.controls.day.valueChanges
+      .pipe(debounceTime(400), startWith(null), map((value) => {
+        return value ? this._filterString(value, this._listDay) : this._listDay.slice()
+      }));
+  }
+
+  private _validateEmail(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } => {
+      let result: {} = null;
+      if (!KRegExp.checkEmail(control.value)) {
+        result = { 'invalid': true };
+      }
+      return result;
+    };
   }
 
   private _validatePassword(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       let result: {} = null;
-      if (!patternLetter.test(control.value)) {
-        let value = { 'letter': true };
+      if (!KRegExp.checkPassword(control.value, 'alphabet')) {
+        let value = { 'alphabet': true };
         result = result ? { ...result, ...value } : value;
       }
-      if (!patternNumber.test(control.value)) {
+      if (!KRegExp.checkPassword(control.value, 'number')) {
         let value = { 'number': true };
         result = result ? { ...result, ...value } : value;
       }
-      if (!patternSpecial.test(control.value)) {
+      if (!KRegExp.checkPassword(control.value, 'special')) {
         let value = { 'special': true };
         result = result ? { ...result, ...value } : value;
       }
@@ -149,16 +248,50 @@ export class SignUpComponent implements OnInit {
   private _validateNickname(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       let result: {} = null;
-      if (!patternNicknameStart.test(control.value)) {
-        let value = { 'start': true };
+      if (!KRegExp.checkNickname(control.value, 'first')) {
+        let value = { 'first': true };
         result = result ? { ...result, ...value } : value;
       }
-      if (!patternNickname.test(control.value)) {
+      if (!KRegExp.checkNickname(control.value, 'letter')) {
         let value = { 'letter': true };
         result = result ? { ...result, ...value } : value;
       }
       return result;
     };
+  }
+
+  private _validateDate(target: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } => {
+      if (control.value.length === 0) {
+        return null;
+      }
+      let result: {} = null;
+      let yearLength: number = this.step3.controls.year.value.length;
+      let monthLength: number = this.step3.controls.month.value.length;
+      let dayLength: number = this.step3.controls.day.value.length;
+      switch (target) {
+        case 'year':
+          break;
+        case 'day':
+          let day = Number(control.value);
+          let lastDay = 31;
+          if (day < 1 || day > lastDay) {
+            let value = { 'day': true };
+            result = result ? { ...result, ...value } : value;
+          }
+          if (dayLength === 0 && (yearLength > 0 || monthLength > 0)) {
+            let value = { 'necessary': true };
+            result = result ? { ...result, ...value } : value;
+          }
+      }
+      return result;
+    };
+  }
+
+  public _filterString(value: string, array: Array<string>): string[] {
+    return array.filter((option) => {
+      return option.toLowerCase().indexOf(value.toLowerCase()) === 0
+    });
   }
 
   public checkAgreement(): boolean {
@@ -168,11 +301,13 @@ export class SignUpComponent implements OnInit {
   public checkPassword(target: string): boolean {
     switch (target) {
       case 'minlength':
-        return !(this.step2.controls.password.hasError('minlength') || this.step2.value.password.length === 0);
+        return !(this.step2.controls.password.hasError('minlength') ||
+          this.step2.value.password.length === 0);
       case 'maxlength':
-        return !(this.step2.controls.password.hasError('maxlength') || this.step2.value.password.length === 0);
-      case 'letter':
-        return !(this.step2.controls.password.hasError('letter'));
+        return !(this.step2.controls.password.hasError('maxlength') ||
+          this.step2.value.password.length === 0);
+      case 'alphabet':
+        return !(this.step2.controls.password.hasError('alphabet'));
       case 'number':
         return !(this.step2.controls.password.hasError('number'));
       case 'special':
@@ -184,54 +319,25 @@ export class SignUpComponent implements OnInit {
   public checkNickname(target: string): boolean {
     switch (target) {
       case 'minlength':
-        return !(this.step3.controls.nickname.hasError('minlength') || this.step3.value.nickname.length === 0);
+        return !(this.step3.controls.nickname.hasError('minlength') ||
+          this.step3.value.nickname.length === 0);
       case 'maxlength':
-        return !(this.step3.controls.nickname.hasError('maxlength') || this.step3.value.nickname.length === 0);
-      case 'start':
-        return !(this.step3.controls.nickname.hasError('start'));
+        return !(this.step3.controls.nickname.hasError('maxlength') ||
+          this.step3.value.nickname.length === 0);
+      case 'first':
+        return !(this.step3.controls.nickname.hasError('first'));
       case 'letter':
         return !(this.step3.controls.nickname.hasError('letter'));
       case 'already':
-        return !(this.step3.controls.nickname.hasError('already') || this.step3.value.nickname.length === 0);
+        return !(this.step3.controls.nickname.hasError('already') ||
+          this.step3.value.nickname.length === 0);
     }
     return true;
   }
 
-  public getErrorMessage(target: string): string {
-    let control: any;
-    let error: string;
-    switch (target) {
-      case 'email':
-        control = this.step2.controls.email;
-        if (control.hasError('required')) {
-          error = this.text.require;
-        } else if (control.hasError('email')) {
-          error = this.text.email_error.valid;
-        } else if (control.hasError('already')) {
-          error = this.text.email_error.already;
-        }
-        break;
-      case 'confirmPassword':
-        control = this.step2.controls.confirm;
-        if (control.hasError('required')) {
-          error = this.text.require;
-        } else if (control.hasError('confirm')) {
-          error = this.text.confirm_password_error.confirm;
-        } else if (control.hasError('password')) {
-          error = this.text.confirm_password_error.password;
-        }
-        break;
-
-    }
-    return error;
-  }
-
   public openStep1TermsDialog(index: number): void {
     this._dialog.open(DialogComponent, {
-      data: {
-        type: 'terms',
-        index: index
-      }
+      data: { type: 'terms', index: index }
     });
   }
 

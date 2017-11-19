@@ -20,10 +20,14 @@ class AppStaticService {
     socketAddress: (location.protocol === 'http:' ? 'ws://' : 'wss://') + location.host,
     ...require('../../../../json/configure.json')
   };
-  static get configure(): KJSON { return AppStaticService._configure; }
+  static get configure(): KJSON {
+    return AppStaticService._configure;
+  }
 
   static _text: KJSON = require('../../../../json/language.' + AppStaticService._configure.language + '.json');
-  static get text(): KJSON { return AppStaticService._text; }
+  static get text(): KJSON {
+    return AppStaticService._text;
+  }
 
 }
 

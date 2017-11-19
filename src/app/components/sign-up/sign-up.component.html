@@ -64,17 +64,17 @@
             <div ngClass.xs="container-step-xs" ngClass.gt-xs="container-step">
 
               <div class="sign-up-row" fxLayout="row">
-                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.email }}</label>
+                <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.email }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="email" placeholder="{{ text.email_placeholder }}" required>
                   <mat-error *ngIf="step2.controls.email.hasError('required')">{{ text.require }}</mat-error>
-                  <mat-error *ngIf="step2.controls.email.hasError('email')">{{ text.email_error.valid }}</mat-error>
+                  <mat-error *ngIf="step2.controls.email.hasError('invalid')">{{ text.email_error.invalid }}</mat-error>
                   <mat-error *ngIf="step2.controls.email.hasError('already')">{{ text.email_error.already }}</mat-error>
                 </mat-form-field>
               </div>
 
               <div class="sign-up-row include-message" fxLayout="row">
-                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.password }}</label>
+                <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.password }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="password" placeholder="{{ text.password_placeholder }}" [type]="isHidePassword ? 'password' : 'text'"
                     required>
@@ -87,8 +87,8 @@
                       <mat-icon>{{ checkPassword('maxlength') ? 'done' : 'block' }}</mat-icon>
                       {{ text.password_error.maxlength }}
                     </div>
-                    <div [class]="checkPassword('letter') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkPassword('letter') ? 'done' : 'block' }}</mat-icon>
+                    <div [class]="checkPassword('alphabet') ? 'message-done' : 'message-error'">
+                      <mat-icon>{{ checkPassword('alphabet') ? 'done' : 'block' }}</mat-icon>
                       {{ text.password_error.letter }}
                     </div>
                     <div [class]="checkPassword('number') ? 'message-done' : 'message-error'">
@@ -104,7 +104,7 @@
               </div>
 
               <div class="sign-up-row" fxLayout="row">
-                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.confirm_password }}</label>
+                <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.confirm_password }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="confirm" placeholder="{{ text.confirm_password_placeholder }}" [type]="isHidePassword ? 'password' : 'text'"
                     required>
@@ -133,7 +133,7 @@
             <div ngClass.xs="container-step-xs" ngClass.gt-xs="container-step">
 
               <div class="sign-up-row include-message" fxLayout="row">
-                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.nickname }}</label>
+                <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.nickname }}</label>
                 <mat-form-field fxFlex>
                   <span matPrefix>@</span>
                   <input matInput formControlName="nickname" placeholder="{{ text.nickname_placeholder }}" required>
@@ -146,8 +146,8 @@
                       <mat-icon>{{ checkNickname('maxlength') ? 'done' : 'block' }}</mat-icon>
                       {{ text.nickname_error.maxlength }}
                     </div>
-                    <div [class]="checkNickname('start') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkNickname('start') ? 'done' : 'block' }}</mat-icon>
+                    <div [class]="checkNickname('first') ? 'message-done' : 'message-error'">
+                      <mat-icon>{{ checkNickname('first') ? 'done' : 'block' }}</mat-icon>
                       {{ text.nickname_error.start }}
                     </div>
                     <div [class]="checkNickname('letter') ? 'message-done' : 'message-error'">
@@ -163,26 +163,47 @@
               </div>
 
               <div class="sign-up-row" fxLayout="row">
-                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.name }}</label>
+                <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.name }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="name" placeholder="{{ text.name_placeholder }}">
                 </mat-form-field>
               </div>
 
               <div class="sign-up-row container-gender" fxLayout="row" fxLayoutAlign="start center">
-                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.gender }}</label>
+                <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.gender }}</label>
                 <mat-radio-group formControlName="gender" fxFlex fxLayoutAlign.xs="space-around center">
                   <mat-radio-button value="male" fxFlex="120px">{{ text.male }}</mat-radio-button>
                   <mat-radio-button value="female" fxFlex="120px">{{ text.female }}</mat-radio-button>
                 </mat-radio-group>
               </div>
 
-              <div class="sign-up-row" fxLayout="row">
-                <label class="input-label" fxFlex="96px" fxHide.xs fxLayoutAlign="end center">{{ text.birth_date }}</label>
-                <mat-form-field fxFlex>
-                  <input matInput formControlName="birthDate" [matDatepicker]="picker" placeholder="Choose a date">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker touchUi="true" startView="year" #picker></mat-datepicker>
+              <div class="sign-up-row" fxLayout="row" fxLayoutAlign="start center">
+                <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.birth_date }}</label>
+                <mat-form-field class="input-date">
+                  <input matInput type="number" maxlength="4" formControlName="year" placeholder="{{ text.year }}" [matAutocomplete]="years">
+                  <mat-autocomplete #years="matAutocomplete">
+                    <mat-option *ngFor="let year of filteredYear | async" [value]="year">{{ year }}</mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="step3.controls.year.hasError('year')">{{ 'year' }}</mat-error>
+                  <mat-error *ngIf="step3.controls.year.hasError('necessary')">{{ 'necessary' }}</mat-error>
+                </mat-form-field>
+                <div>&nbsp;-&nbsp;</div>
+                <mat-form-field class="input-date">
+                  <input matInput type="number" formControlName="month" placeholder="{{ text.month }}" [matAutocomplete]="months">
+                  <mat-autocomplete #months="matAutocomplete">
+                    <mat-option *ngFor="let month of filteredMonth | async" [value]="month">{{ month }}</mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="step3.controls.month.hasError('month')">{{ 'month' }}</mat-error>
+                  <mat-error *ngIf="step3.controls.month.hasError('necessary')">{{ 'necessary' }}</mat-error>
+                </mat-form-field>
+                <div>&nbsp;-&nbsp;</div>
+                <mat-form-field class="input-date">
+                  <input matInput type="number" formControlName="day" placeholder="{{ text.day }}" [matAutocomplete]="days">
+                  <mat-autocomplete #days="matAutocomplete">
+                    <mat-option *ngFor="let day of filteredDay | async" [value]="day">{{ day }}</mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="step3.controls.day.hasError('day')">{{ 'day' }}</mat-error>
+                  <mat-error *ngIf="step3.controls.day.hasError('necessary')">{{ 'necessary' }}</mat-error>
                 </mat-form-field>
               </div>
 

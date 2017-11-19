@@ -33,6 +33,7 @@
 
 .input-label {
   padding-right: 16px;
+  width: 96px;
 }
 
 .button-term {
@@ -50,4 +51,8 @@
 
 .container-gender {
   height: 80px;
+}
+
+.input-date {
+  min-width: 64px;
 }
