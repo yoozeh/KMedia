@@ -206,4 +206,8 @@ export class SignUpComponent implements OnInit {
     );
   }
 
+  public submit(): void {
+    alert('111');
+  }
+
 }
