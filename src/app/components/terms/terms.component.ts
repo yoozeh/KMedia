@@ -1,29 +1,25 @@
-import { Component, OnInit, ViewEncapsulation, Inject, Input } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 
-import { KJSON, APP_TEXT, NetworkService } from '../../../modules/app-services/app-services.module';
+import * as MarkdownIt from 'markdown-it';
 
-import * as md from 'markdown-it';
+import { KT_JSON, APP_TEXT } from '../../app.environments.service';
+import { NetworkService } from '../../services/network.service';
 
 @Component({
   selector: 'k-terms',
   templateUrl: './terms.component.html',
-  styleUrls: ['./terms.component.css'],
-  encapsulation: ViewEncapsulation.Emulated
+  styleUrls: ['./terms.component.css']
 })
 export class TermsComponent implements OnInit {
 
-  @Input() public index: number;
+  @Input()
+  public index: number;
 
-  private _md: md;
-  
+  private _md: MarkdownIt.MarkdownIt;
+
   private _isLoading: boolean = true;
   get isLoading(): boolean {
     return this._isLoading;
-  }
-
-  private _title: string;
-  get title(): string {
-    return this._title;
   }
 
   private _contents: string;
@@ -32,12 +28,12 @@ export class TermsComponent implements OnInit {
   }
 
   constructor(
-    @Inject(APP_TEXT) public text: KJSON,
-    private _network: NetworkService
+    private _network: NetworkService,
+    @Inject(APP_TEXT) public text: KT_JSON
   ) { }
 
   ngOnInit(): void {
-    this._md = new md({
+    this._md = new MarkdownIt({
       html: true,
       //linkify: true,
       typographer: true
@@ -46,15 +42,12 @@ export class TermsComponent implements OnInit {
     let filename: string = null;
     switch (this.index) {
       case 1:
-        this._title = this.text.terms_of_service;
         filename = this.text.file_terms_of_service;
         break;
       case 2:
-        this._title = this.text.privacy_policy;
         filename = this.text.file_privacy_policy;
         break;
       case 3:
-        this._title = this.text.user_location;
         filename = this.text.file_user_location;
         break;
     }

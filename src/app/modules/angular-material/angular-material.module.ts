@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {
@@ -10,6 +9,7 @@ import {
   MatCardModule,
   MatCheckboxModule,
   MatChipsModule,
+  MatCommonModule,
   MatDatepickerModule,
   MatDialogModule,
   MatExpansionModule,
@@ -28,9 +28,9 @@ import {
   MatSidenavModule,
   MatSliderModule,
   MatSlideToggleModule,
-  MatStepperModule,
   MatSnackBarModule,
   MatSortModule,
+  MatStepperModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
@@ -48,6 +48,7 @@ import {
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,
+    MatCommonModule,
     MatDatepickerModule,
     MatDialogModule,
     MatExpansionModule,
@@ -66,9 +67,9 @@ import {
     MatSidenavModule,
     MatSliderModule,
     MatSlideToggleModule,
-    MatStepperModule,
     MatSnackBarModule,
     MatSortModule,
+    MatStepperModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
@@ -83,6 +84,7 @@ import {
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,
+    MatCommonModule,
     MatDatepickerModule,
     MatDialogModule,
     MatExpansionModule,

@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'k-dialog',
   templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.css'],
-  encapsulation: ViewEncapsulation.Emulated
+  styleUrls: ['./dialog.component.css']
 })
 export class DialogComponent implements OnInit {
 

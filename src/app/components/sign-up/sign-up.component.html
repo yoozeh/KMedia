@@ -12,39 +12,37 @@
           <form [formGroup]="step1" novalidate>
             <div ngClass.xs="container-step-xs" ngClass.gt-xs="container-step">
 
-              <div class="sign-up-row" fxLayout="row">
-                <mat-checkbox formControlName="checkAll" (change)="onStep1CheckAll()">{{ text.check_all }}</mat-checkbox>
+              <div class="row" fxLayout="row">
+                <mat-checkbox formControlName="checkAll" (change)="clickCheckAll()">{{ text.check_all }}</mat-checkbox>
               </div>
 
-              <div class="sign-up-row" fxLayout="row" fxLayoutAlign="start center">
-                <mat-error [class]="'message-agreement ' + (checkAgreement() ? 'message-done' : 'message-error')" fxFill fxLayoutAlign="start center">
-                  <mat-icon class="message-agreement">{{ checkAgreement() ? 'done' : 'block' }}</mat-icon>
-                  {{ text.sign_up_step1_error }}
-                </mat-error>
+              <div class="row" fxLayout="row" fxLayoutAlign="start center">
+                <k-mat-notice-text [size]="0.8" [status]="checkError('agreement') ? 'danger' : 'success'" [text]="text.sign_up_step1_error">
+                </k-mat-notice-text>
               </div>
 
-              <div class="sign-up-row" fxLayout="row" fxLayoutAlign="center center">
+              <div class="row" fxLayout="row" fxLayoutAlign="center center">
                 <div fxFlex>
-                  <button mat-button class="button-term" (click)="openStep1TermsDialog(1)">{{ text.terms_of_service }}</button>
+                  <button mat-button class="button-term" (click)="openTermsDialog(1)">{{ text.terms_of_service }}</button>
                 </div>
-                <mat-checkbox formControlName="checkTOS" (change)="onStep1Check()" required></mat-checkbox>
+                <mat-checkbox formControlName="checkTOS" (change)="clickCheck()" required></mat-checkbox>
               </div>
 
-              <div class="sign-up-row" fxLayout="row" fxLayoutAlign="center center">
+              <div class="row" fxLayout="row" fxLayoutAlign="center center">
                 <div fxFlex>
-                  <button mat-button class="button-term" (click)="openStep1TermsDialog(2)">{{ text.privacy_policy }}</button>
+                  <button mat-button class="button-term" (click)="openTermsDialog(2)">{{ text.privacy_policy }}</button>
                 </div>
-                <mat-checkbox formControlName="checkPP" (change)="onStep1Check()" required></mat-checkbox>
+                <mat-checkbox formControlName="checkPP" (change)="clickCheck()" required></mat-checkbox>
               </div>
 
-              <div class="sign-up-row" fxLayout="row" fxLayoutAlign="center center">
+              <div class="row" fxLayout="row" fxLayoutAlign="center center">
                 <div fxFlex>
-                  <button mat-button class="button-term" (click)="openStep1TermsDialog(3)">
+                  <button mat-button class="button-term" (click)="openTermsDialog(3)">
                     {{ text.user_location }}
                     <span class="text-option">({{ text.option }})</span>
                   </button>
                 </div>
-                <mat-checkbox formControlName="checkUL" (change)="onStep1Check()"></mat-checkbox>
+                <mat-checkbox formControlName="checkUL" (change)="clickCheck()"></mat-checkbox>
               </div>
 
             </div>
@@ -63,7 +61,7 @@
           <form [formGroup]="step2" novalidate>
             <div ngClass.xs="container-step-xs" ngClass.gt-xs="container-step">
 
-              <div class="sign-up-row" fxLayout="row">
+              <div class="row" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.email }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="email" placeholder="{{ text.email_placeholder }}" required>
@@ -73,37 +71,27 @@
                 </mat-form-field>
               </div>
 
-              <div class="sign-up-row include-message" fxLayout="row">
+              <div class="row include-message" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.password }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="password" placeholder="{{ text.password_placeholder }}" [type]="isHidePassword ? 'password' : 'text'"
                     required>
                   <mat-hint fxLayout="column">
-                    <div [class]="checkPassword('minlength') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkPassword('minlength') ? 'done' : 'block' }}</mat-icon>
-                      {{ text.password_error.minlength }}
-                    </div>
-                    <div [class]="checkPassword('maxlength') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkPassword('maxlength') ? 'done' : 'block' }}</mat-icon>
-                      {{ text.password_error.maxlength }}
-                    </div>
-                    <div [class]="checkPassword('alphabet') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkPassword('alphabet') ? 'done' : 'block' }}</mat-icon>
-                      {{ text.password_error.letter }}
-                    </div>
-                    <div [class]="checkPassword('number') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkPassword('number') ? 'done' : 'block' }}</mat-icon>
-                      {{ text.password_error.number }}
-                    </div>
-                    <div [class]="checkPassword('special') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkPassword('special') ? 'done' : 'block' }}</mat-icon>
-                      {{ text.password_error.special }}
-                    </div>
+                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'minlength') ? 'danger' : 'success'" [text]="text.password_error.minlength">
+                    </k-mat-notice-text>
+                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'maxlength') ? 'danger' : 'success'" [text]="text.password_error.maxlength">
+                    </k-mat-notice-text>
+                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'alphabet') ? 'danger' : 'success'" [text]="text.password_error.letter">
+                    </k-mat-notice-text>
+                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'number') ? 'danger' : 'success'" [text]="text.password_error.number">
+                    </k-mat-notice-text>
+                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'special') ? 'danger' : 'success'" [text]="text.password_error.special">
+                    </k-mat-notice-text>
                   </mat-hint>
                 </mat-form-field>
               </div>
 
-              <div class="sign-up-row" fxLayout="row">
+              <div class="row" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.confirm_password }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="confirm" placeholder="{{ text.confirm_password_placeholder }}" [type]="isHidePassword ? 'password' : 'text'"
@@ -132,78 +120,44 @@
           <form [formGroup]="step3" novalidate>
             <div ngClass.xs="container-step-xs" ngClass.gt-xs="container-step">
 
-              <div class="sign-up-row include-message" fxLayout="row">
+              <div class="row include-message" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.nickname }}</label>
                 <mat-form-field fxFlex>
                   <span matPrefix>@</span>
                   <input matInput formControlName="nickname" placeholder="{{ text.nickname_placeholder }}" required>
                   <mat-hint fxLayout="column">
-                    <div [class]="checkNickname('minlength') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkNickname('minlength') ? 'done' : 'block' }}</mat-icon>
-                      {{ text.nickname_error.minlength }}
-                    </div>
-                    <div [class]="checkNickname('maxlength') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkNickname('maxlength') ? 'done' : 'block' }}</mat-icon>
-                      {{ text.nickname_error.maxlength }}
-                    </div>
-                    <div [class]="checkNickname('first') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkNickname('first') ? 'done' : 'block' }}</mat-icon>
-                      {{ text.nickname_error.start }}
-                    </div>
-                    <div [class]="checkNickname('letter') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkNickname('letter') ? 'done' : 'block' }}</mat-icon>
-                      {{ text.nickname_error.letter }}
-                    </div>
-                    <div [class]="checkNickname('already') ? 'message-done' : 'message-error'">
-                      <mat-icon>{{ checkNickname('already') ? 'done' : 'block' }}</mat-icon>
-                      {{ text.nickname_error.already }}
-                    </div>
+                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'minlength') ? 'danger' : 'success'" [text]="text.nickname_error.minlength">
+                    </k-mat-notice-text>
+                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'maxlength') ? 'danger' : 'success'" [text]="text.nickname_error.maxlength">
+                    </k-mat-notice-text>
+                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'first') ? 'danger' : 'success'" [text]="text.nickname_error.first">
+                    </k-mat-notice-text>
+                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'letter') ? 'danger' : 'success'" [text]="text.nickname_error.letter">
+                    </k-mat-notice-text>
+                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'already') ? 'danger' : 'success'" [text]="text.nickname_error.already">
+                    </k-mat-notice-text>
                   </mat-hint>
                 </mat-form-field>
               </div>
 
-              <div class="sign-up-row" fxLayout="row">
+              <div class="row" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.name }}</label>
                 <mat-form-field fxFlex>
                   <input matInput formControlName="name" placeholder="{{ text.name_placeholder }}">
                 </mat-form-field>
               </div>
 
-              <div class="sign-up-row container-gender" fxLayout="row" fxLayoutAlign="start center">
+              <div class="row" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.gender }}</label>
-                <mat-radio-group formControlName="gender" fxFlex fxLayoutAlign.xs="space-around center">
-                  <mat-radio-button value="male" fxFlex="120px">{{ text.male }}</mat-radio-button>
-                  <mat-radio-button value="female" fxFlex="120px">{{ text.female }}</mat-radio-button>
-                </mat-radio-group>
+                <mat-form-field fxFlex>
+                  <k-mat-radios formControlName="gender" placeholder="{{ text.gender }}" [items]="gender"></k-mat-radios>
+                </mat-form-field>
               </div>
 
-              <div class="sign-up-row" fxLayout="row" fxLayoutAlign="start center">
+              <div class="row" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.birth_date }}</label>
-                <mat-form-field class="input-date">
-                  <input matInput type="number" maxlength="4" formControlName="year" placeholder="{{ text.year }}" [matAutocomplete]="years">
-                  <mat-autocomplete #years="matAutocomplete">
-                    <mat-option *ngFor="let year of filteredYear | async" [value]="year">{{ year }}</mat-option>
-                  </mat-autocomplete>
-                  <mat-error *ngIf="step3.controls.year.hasError('year')">{{ 'year' }}</mat-error>
-                  <mat-error *ngIf="step3.controls.year.hasError('necessary')">{{ 'necessary' }}</mat-error>
-                </mat-form-field>
-                <div>&nbsp;-&nbsp;</div>
-                <mat-form-field class="input-date">
-                  <input matInput type="number" formControlName="month" placeholder="{{ text.month }}" [matAutocomplete]="months">
-                  <mat-autocomplete #months="matAutocomplete">
-                    <mat-option *ngFor="let month of filteredMonth | async" [value]="month">{{ month }}</mat-option>
-                  </mat-autocomplete>
-                  <mat-error *ngIf="step3.controls.month.hasError('month')">{{ 'month' }}</mat-error>
-                  <mat-error *ngIf="step3.controls.month.hasError('necessary')">{{ 'necessary' }}</mat-error>
-                </mat-form-field>
-                <div>&nbsp;-&nbsp;</div>
-                <mat-form-field class="input-date">
-                  <input matInput type="number" formControlName="day" placeholder="{{ text.day }}" [matAutocomplete]="days">
-                  <mat-autocomplete #days="matAutocomplete">
-                    <mat-option *ngFor="let day of filteredDay | async" [value]="day">{{ day }}</mat-option>
-                  </mat-autocomplete>
-                  <mat-error *ngIf="step3.controls.day.hasError('day')">{{ 'day' }}</mat-error>
-                  <mat-error *ngIf="step3.controls.day.hasError('necessary')">{{ 'necessary' }}</mat-error>
+                <mat-form-field fxFlex>
+                  <k-mat-date-input formControlName="birthDate" [startyear]="1950" placeholder="{{ text.birth_date_placeholder }}"></k-mat-date-input>
                 </mat-form-field>
               </div>
 
@@ -229,7 +183,7 @@
 
           <div fxLayout="row" fxLayoutAlign="end center">
             <button mat-button matStepperPrevious>{{ text.prev }}</button>
-            <button mat-button type="submit" (click)="onSubmit()" [disabled]="step1.invalid || step2.invalid || step3.invalid">{{ text.done }}</button>
+            <button mat-button type="submit" (click)="submit()" [disabled]="step1.invalid || step2.invalid || step3.invalid">{{ text.done }}</button>
           </div>
         </mat-step>
 

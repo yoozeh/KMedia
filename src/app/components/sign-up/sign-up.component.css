@@ -15,25 +15,8 @@
   padding-bottom: 24px;
 }
 
-.sign-up-row {
+.row {
   padding: 8px 0;
-}
-
-.message-done {
-  color: green;
-}
-
-.message-error {
-  color: #f44336;
-}
-
-.message-agreement {
-  font-size: 12px;
-}
-
-.input-label {
-  padding-right: 16px;
-  width: 96px;
 }
 
 .button-term {
@@ -45,14 +28,11 @@
   font-size: 10px;
 }
 
+.input-label {
+  padding-right: 16px;
+  width: 96px;
+}
+
 .include-message {
   margin-bottom: 48px;
-}
-
-.container-gender {
-  height: 80px;
-}
-
-.input-date {
-  min-width: 64px;
 }

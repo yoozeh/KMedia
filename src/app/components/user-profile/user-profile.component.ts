@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'k-user-profile',
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css'],
-  encapsulation: ViewEncapsulation.Emulated
+  styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
 
@@ -22,7 +21,6 @@ export class UserProfileComponent implements OnInit {
   get picURL(): string {
     return this._picURL;
   }
-
 
   constructor() { }
 

@@ -1,0 +1,5 @@
+<mat-radio-group [formControl]="formControl">
+  <mat-radio-button *ngFor="let item of items" value="{{ item.value }}" [fxFlex]="item.width">
+    {{ item.text }}
+  </mat-radio-button>
+</mat-radio-group>

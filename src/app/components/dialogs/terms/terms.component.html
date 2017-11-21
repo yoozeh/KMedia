@@ -1,7 +1,0 @@
-<h1 mat-dialog-title>{{ title }}</h1>
-<mat-dialog-content>
-  <div *ngIf="isLoading" class="loading" fxLayoutAlign="center center">
-    <mat-progress-spinner mode="indeterminate" [diameter]="40"></mat-progress-spinner>
-  </div>
-  <div *ngIf="!isLoading" [innerHTML]="contents"></div>
-</mat-dialog-content>

@@ -1,27 +1,26 @@
-import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 
-import { KJSON, APP_TEXT } from '../../modules/app-services/app-services.module';
+import { KT_JSON, APP_TEXT } from '../../app.environments.service';
 
-interface MenuList {
+export type KT_MENU_LIST = {
   title: string;
   items: string[];
-}
+};
 
 @Component({
   selector: 'k-sidenav',
   templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.css'],
-  encapsulation: ViewEncapsulation.Emulated
+  styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit {
 
-  private _menu: Array<MenuList>;
-  get menu(): Array<MenuList> {
+  private _menu: Array<KT_MENU_LIST>;
+  get menu(): Array<KT_MENU_LIST> {
     return this._menu;
   }
 
   constructor(
-    @Inject(APP_TEXT) public text: KJSON
+    @Inject(APP_TEXT) public text: KT_JSON
   ) { }
 
   ngOnInit(): void {

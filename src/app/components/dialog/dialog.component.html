@@ -1,1 +1,4 @@
-<k-terms *ngIf="data.type==='terms'" [index]="data.index"></k-terms>
+<h1 mat-dialog-title *ngIf="data.title">{{ data.title }}</h1>
+<mat-dialog-content>
+  <k-terms *ngIf="data.type==='terms'" [index]="data.index"></k-terms>
+</mat-dialog-content>

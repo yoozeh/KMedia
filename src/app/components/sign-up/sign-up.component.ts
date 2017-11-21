@@ -1,29 +1,21 @@
-import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormControl,
-  AbstractControl,
-  Validators,
-  ValidatorFn
-} from '@angular/forms';
-import { MatDialog, MatSelect } from '@angular/material';
-
-import { debounceTime, startWith, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-
-import { KJSON, APP_TEXT, NetworkService } from '../../modules/app-services/app-services.module';
-
-import { DialogComponent } from '../dialog/dialog.component';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, AbstractControl, Validators, ValidatorFn } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+import { debounceTime } from 'rxjs/operators';
 
 import { KRegExp } from '../../../common/k-reg-exp';
-import { KUser } from '../../../common/k-user';
+
+import { KT_JSON, APP_TEXT } from '../../app.environments.service';
+import { NetworkService } from '../../services/network.service';
+
+import { KValidator } from '../../classes/k-validator';
+
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'k-sign-up',
   templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.css'],
-  encapsulation: ViewEncapsulation.Emulated
+  styleUrls: ['./sign-up.component.css']
 })
 export class SignUpComponent implements OnInit {
 
@@ -33,27 +25,14 @@ export class SignUpComponent implements OnInit {
 
   public isHidePassword: boolean = true;
 
-  public filteredYear: Observable<string[]>;
-  public filteredMonth: Observable<string[]>;
-  public filteredDay: Observable<string[]>;
-
-  private thisYear = new Date().getFullYear();
-  private _listYear = Array.from({ length: this.thisYear - 1900 + 1 },
-    (_, key) => (this.thisYear - key).toString());
-  private _listMonth = Array.from({ length: 12 },
-    (_, key) => (key + 1).toString());
-  private _listDay = Array.from({ length: 31 },
-    (_, key) => (key + 1).toString());
-
+  public gender: Array<any>;
 
   constructor(
-    @Inject(APP_TEXT) public text: KJSON,
-    private _network: NetworkService,
     private _formBuilder: FormBuilder,
-    private _dialog: MatDialog
-  ) { }
-
-  public ngOnInit(): void {
+    private _dialog: MatDialog,
+    private _network: NetworkService,
+    @Inject(APP_TEXT) public text: KT_JSON
+  ) {
     this.step1 = this._formBuilder.group({
       checkAll: '',
       checkTOS: ['', Validators.required],
@@ -61,32 +40,47 @@ export class SignUpComponent implements OnInit {
       checkUL: ''
     });
     this.step2 = this._formBuilder.group({
-      email: ['', [Validators.required, this._validateEmail()]],
-      password: ['',
-        [
-          Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(24),
-          this._validatePassword()
-        ]
-      ],
-      confirm: ['', [Validators.required, this._validateConfirmPassword()]]
+      email: ['', [
+        Validators.required,
+        KValidator.validateString({ 'invalid': KRegExp.checkEmail })
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(24),
+        KValidator.validateString({
+          'alphabet': KRegExp.passwordAlphabet,
+          'number': KRegExp.passwordNumber,
+          'special': KRegExp.passwordSpecial
+        })
+      ]],
+      confirm: ['', [
+        Validators.required,
+        this._validateConfirmPassword()
+      ]]
     });
     this.step3 = this._formBuilder.group({
-      nickname: ['',
-        [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.maxLength(16),
-          this._validateNickname()
-        ]
-      ],
+      nickname: ['', [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(16),
+        KValidator.validateString({
+          'first': KRegExp.nicknameFirst,
+          'letter': KRegExp.nicknameLetter
+        })
+      ]],
       name: '',
       gender: '',
-      year: '',
-      month: '',
-      day: ''
+      birthDate: '',
     });
+
+    this.gender = [
+      { text: this.text.male, value: 'male' },
+      { text: this.text.female, value: 'female' }
+    ];
+  }
+
+  ngOnInit(): void {
     this.step2.controls.email.valueChanges
       .pipe(debounceTime(800))
       .subscribe((value) => {
@@ -115,117 +109,6 @@ export class SignUpComponent implements OnInit {
           );
         }
       });
-    this.step3.controls.year.valueChanges
-      .subscribe((value) => {
-        let yearLength: number = this.step3.controls.year.value.length;
-        let monthLength: number = this.step3.controls.month.value.length;
-        let dayLength: number = this.step3.controls.day.value.length;
-        let lamda = (value) => { return value === this.step3.controls.year.value; };
-        if (this._listYear.findIndex(lamda) === -1) {
-          this.step3.controls.year.setErrors({ 'year': true });
-        }
-        if (yearLength === 0 && (monthLength > 0 || dayLength > 0)) {
-          this.step3.controls.year.setErrors({ 'necessary': true });
-        }
-        if (yearLength > 0) {
-          if (monthLength === 0) {
-            this.step3.controls.month.setErrors({ 'necessary': true });
-            this.step3.controls.month.updateValueAndValidity();
-          }
-          if (dayLength === 0) {
-            this.step3.controls.day.setErrors({ 'necessary': true });
-            this.step3.controls.day.updateValueAndValidity();
-          }
-        }
-      });
-    this.step3.controls.month.valueChanges
-      .subscribe((value) => {
-        let yearLength: number = this.step3.controls.year.value.length;
-        let monthLength: number = this.step3.controls.month.value.length;
-        let dayLength: number = this.step3.controls.day.value.length;
-        let month = Number(this.step3.controls.month.value);
-        if (month < 1 || month > 12) {
-          this.step3.controls.month.setErrors({ 'year': true });
-        }
-        if (monthLength === 0 && (yearLength > 0 || dayLength > 0)) {
-          let value = { 'necessary': true };
-        }
-        if (monthLength > 0) {
-          if (yearLength === 0) {
-            this.step3.controls.year.setErrors({ 'necessary': true });
-            this.step3.controls.year.updateValueAndValidity();
-          }
-          if (dayLength === 0) {
-            this.step3.controls.day.setErrors({ 'necessary': true });
-            this.step3.controls.day.updateValueAndValidity();
-          }
-        }
-      });
-    this.step3.controls.day.valueChanges
-      .subscribe((value) => {
-        let yearLength: number = this.step3.controls.year.value.length;
-        let monthLength: number = this.step3.controls.month.value.length;
-        let dayLength: number = this.step3.controls.day.value.length;
-        let day = Number(this.step3.controls.day.value);
-        let lastDay = 31;
-        if (day < 1 || day > lastDay) {
-          this.step3.controls.day.setErrors({ 'year': true });
-        }
-        if (dayLength === 0 && (yearLength > 0 || monthLength > 0)) {
-          let value = { 'necessary': true };
-        }
-        if (dayLength > 0) {
-          if (yearLength === 0) {
-            this.step3.controls.year.setErrors({ 'necessary': true });
-            this.step3.controls.year.updateValueAndValidity();
-          }
-          if (monthLength === 0) {
-            this.step3.controls.month.setErrors({ 'necessary': true });
-            this.step3.controls.month.updateValueAndValidity();
-          }
-        }
-      });
-    this.filteredYear = this.step3.controls.year.valueChanges
-      .pipe(debounceTime(400), startWith(null), map((value) => {
-        return value ? this._filterString(value, this._listYear) : this._listYear.slice()
-      }))
-    this.filteredMonth = this.step3.controls.month.valueChanges
-      .pipe(debounceTime(400), startWith(null), map((value) => {
-        return value ? this._filterString(value, this._listMonth) : this._listMonth.slice()
-      }));
-    this.filteredDay = this.step3.controls.day.valueChanges
-      .pipe(debounceTime(400), startWith(null), map((value) => {
-        return value ? this._filterString(value, this._listDay) : this._listDay.slice()
-      }));
-  }
-
-  private _validateEmail(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
-      let result: {} = null;
-      if (!KRegExp.checkEmail(control.value)) {
-        result = { 'invalid': true };
-      }
-      return result;
-    };
-  }
-
-  private _validatePassword(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
-      let result: {} = null;
-      if (!KRegExp.checkPassword(control.value, 'alphabet')) {
-        let value = { 'alphabet': true };
-        result = result ? { ...result, ...value } : value;
-      }
-      if (!KRegExp.checkPassword(control.value, 'number')) {
-        let value = { 'number': true };
-        result = result ? { ...result, ...value } : value;
-      }
-      if (!KRegExp.checkPassword(control.value, 'special')) {
-        let value = { 'special': true };
-        result = result ? { ...result, ...value } : value;
-      }
-      return result;
-    };
   }
 
   private _validateConfirmPassword(): ValidatorFn {
@@ -245,103 +128,65 @@ export class SignUpComponent implements OnInit {
     };
   }
 
-  private _validateNickname(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
-      let result: {} = null;
-      if (!KRegExp.checkNickname(control.value, 'first')) {
-        let value = { 'first': true };
-        result = result ? { ...result, ...value } : value;
-      }
-      if (!KRegExp.checkNickname(control.value, 'letter')) {
-        let value = { 'letter': true };
-        result = result ? { ...result, ...value } : value;
-      }
-      return result;
-    };
-  }
-
-  private _validateDate(target: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
-      if (control.value.length === 0) {
-        return null;
-      }
-      let result: {} = null;
-      let yearLength: number = this.step3.controls.year.value.length;
-      let monthLength: number = this.step3.controls.month.value.length;
-      let dayLength: number = this.step3.controls.day.value.length;
-      switch (target) {
-        case 'year':
-          break;
-        case 'day':
-          let day = Number(control.value);
-          let lastDay = 31;
-          if (day < 1 || day > lastDay) {
-            let value = { 'day': true };
-            result = result ? { ...result, ...value } : value;
-          }
-          if (dayLength === 0 && (yearLength > 0 || monthLength > 0)) {
-            let value = { 'necessary': true };
-            result = result ? { ...result, ...value } : value;
-          }
-      }
-      return result;
-    };
-  }
-
-  public _filterString(value: string, array: Array<string>): string[] {
-    return array.filter((option) => {
-      return option.toLowerCase().indexOf(value.toLowerCase()) === 0
-    });
-  }
-
-  public checkAgreement(): boolean {
-    return this.step1.value.checkTOS && this.step1.value.checkPP;
-  }
-
-  public checkPassword(target: string): boolean {
-    switch (target) {
-      case 'minlength':
-        return !(this.step2.controls.password.hasError('minlength') ||
-          this.step2.value.password.length === 0);
-      case 'maxlength':
-        return !(this.step2.controls.password.hasError('maxlength') ||
-          this.step2.value.password.length === 0);
-      case 'alphabet':
-        return !(this.step2.controls.password.hasError('alphabet'));
-      case 'number':
-        return !(this.step2.controls.password.hasError('number'));
-      case 'special':
-        return !(this.step2.controls.password.hasError('special'));
+  public checkError(name: string, error?: string): boolean {
+    switch (name.toLowerCase()) {
+      case 'agreement':
+        return !this.step1.value.checkTOS || !this.step1.value.checkPP;
+      case 'password':
+        switch (error) {
+          case 'minlength':
+            return this.step2.controls.password.hasError('minlength') ||
+              this.step2.value.password.length === 0;
+          case 'maxlength':
+            return this.step2.controls.password.hasError('maxlength') ||
+              this.step2.value.password.length === 0;
+          case 'alphabet':
+            return this.step2.controls.password.hasError('alphabet');
+          case 'number':
+            return this.step2.controls.password.hasError('number');
+          case 'special':
+            return this.step2.controls.password.hasError('special');
+        }
+      case 'nickname':
+        switch (error) {
+          case 'minlength':
+            return this.step3.controls.nickname.hasError('minlength') ||
+              this.step3.value.nickname.length === 0;
+          case 'maxlength':
+            return this.step3.controls.nickname.hasError('maxlength') ||
+              this.step3.value.nickname.length === 0;
+          case 'first':
+            return this.step3.controls.nickname.hasError('first');
+          case 'letter':
+            return this.step3.controls.nickname.hasError('letter');
+          case 'already':
+            return this.step3.controls.nickname.hasError('already') ||
+              this.step3.value.nickname.length === 0;
+        }
+        break;
     }
-    return true;
+    return false;
   }
 
-  public checkNickname(target: string): boolean {
-    switch (target) {
-      case 'minlength':
-        return !(this.step3.controls.nickname.hasError('minlength') ||
-          this.step3.value.nickname.length === 0);
-      case 'maxlength':
-        return !(this.step3.controls.nickname.hasError('maxlength') ||
-          this.step3.value.nickname.length === 0);
-      case 'first':
-        return !(this.step3.controls.nickname.hasError('first'));
-      case 'letter':
-        return !(this.step3.controls.nickname.hasError('letter'));
-      case 'already':
-        return !(this.step3.controls.nickname.hasError('already') ||
-          this.step3.value.nickname.length === 0);
+  public openTermsDialog(index: number): void {
+    let title: string = '';
+    switch (index) {
+      case 1:
+        title = this.text.terms_of_service;
+        break;
+      case 2:
+        title = this.text.privacy_policy;
+        break;
+      case 3:
+        title = this.text.user_location;
+        break;
     }
-    return true;
-  }
-
-  public openStep1TermsDialog(index: number): void {
     this._dialog.open(DialogComponent, {
-      data: { type: 'terms', index: index }
+      data: { title: title, type: 'terms', index: index }
     });
   }
 
-  public onStep1CheckAll(): void {
+  public clickCheckAll(): void {
     if (this.step1.value.checkAll) {
       this.step1.controls.checkTOS.setValue(true);
       this.step1.controls.checkPP.setValue(true);
@@ -353,16 +198,12 @@ export class SignUpComponent implements OnInit {
     }
   }
 
-  public onStep1Check(): void {
+  public clickCheck(): void {
     this.step1.controls.checkAll.setValue(
       this.step1.value.checkTOS &&
       this.step1.value.checkPP &&
       this.step1.value.checkUL
     );
-  }
-
-  public onSubmit(): void {
-    alert('111');
   }
 
 }

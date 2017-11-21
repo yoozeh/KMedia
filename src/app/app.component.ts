@@ -8,7 +8,8 @@ import { MatSidenav } from '@angular/material';
 })
 export class AppComponent {
 
-  @ViewChild(MatSidenav) private _sidenav;
+  @ViewChild(MatSidenav)
+  private _sidenav: MatSidenav;
 
   onSidenav(event: string): void {
     switch (event) {

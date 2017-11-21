@@ -1,0 +1,16 @@
+<div [formGroup]="formGroup">
+  <input formControlName="year" size="4" maxlength="4" [matAutocomplete]="years" fxFlex="50">
+  <mat-autocomplete #years="matAutocomplete">
+    <mat-option *ngFor="let year of filtered.year | async" [value]="year">{{ year }}</mat-option>
+  </mat-autocomplete>
+  <span>&ndash;</span>
+  <input formControlName="month" size="2" maxlength="2" [matAutocomplete]="months" fxFlex="25">
+  <mat-autocomplete #months="matAutocomplete">
+    <mat-option *ngFor="let month of filtered.month | async" [value]="month">{{ month }}</mat-option>
+  </mat-autocomplete>
+  <span>&ndash;</span>
+  <input formControlName="day" size="2" maxlength="2" [matAutocomplete]="days" fxFlex="25">
+  <mat-autocomplete #days="matAutocomplete">
+    <mat-option *ngFor="let day of filtered.day | async" [value]="day">{{ day }}</mat-option>
+  </mat-autocomplete>
+</div>
