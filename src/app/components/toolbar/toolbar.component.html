@@ -2,10 +2,10 @@
   <button mat-icon-button class="button-menu" (click)="onMenu()">
     <mat-icon>menu</mat-icon>
   </button>
-  <a class="mat-button logo" (click)="onLogo()">{{ text.logo_text }}</a>
+  <a class="mat-button logo" routerLink="">{{ text.logo_text }}</a>
   <div fxFlex fxLayoutAlign="end center">
     <input type="search" class="input-search" placeholder="Search" fxHide.lt-sm>
   </div>
-  <button mat-button class="button" (click)="onLogin()">{{ text.sign_in }}</button>
-  <button mat-button class="button" (click)="onJoin()">{{ text.sign_up }}</button>
+  <button mat-button class="button" routerLink="">{{ text.sign_in }}</button>
+  <button mat-button class="button" routerLink="/sign-up">{{ text.sign_up }}</button>
 </mat-toolbar>

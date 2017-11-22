@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl, Validators, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatVerticalStepper } from '@angular/material';
 import { debounceTime } from 'rxjs/operators';
 
 import { KRegExp } from '../../../common/k-reg-exp';
@@ -19,16 +19,40 @@ import { DialogComponent } from '../dialog/dialog.component';
 })
 export class SignUpComponent implements OnInit {
 
+  private _index: number = 1;
+  get index(): number {
+    return this._index;
+  }
+
   public step1: FormGroup;
   public step2: FormGroup;
   public step3: FormGroup;
 
-  public isHidePassword: boolean = true;
+  public agreement = {
+    termsOfService: false,
+    privacyPolicy: false,
+    userLocation: false
+  };
 
+  public account = {
+    email: '',
+    password: ''
+  };
+
+  public personal = {
+    nickname: '',
+    name: '',
+    gender: '',
+    birth: ''
+  };
+
+  public isHidePassword: boolean = true;
   public gender: Array<any>;
+  public loadingHeight: number = 0;
 
   constructor(
     private _formBuilder: FormBuilder,
+    private _elementRef: ElementRef,
     private _dialog: MatDialog,
     private _network: NetworkService,
     @Inject(APP_TEXT) public text: KT_JSON
@@ -80,18 +104,23 @@ export class SignUpComponent implements OnInit {
     ];
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
+    this.step2.controls.password.valueChanges.subscribe((value) => {
+      if (this.step2.controls.confirm.dirty) {
+        this.step2.controls.confirm.updateValueAndValidity();
+      }
+    });
     this.step2.controls.email.valueChanges
       .pipe(debounceTime(800))
       .subscribe((value) => {
         if (value.length > 0 && this.step2.controls.email.valid) {
           this._network.request('check-email', value).subscribe(
             (response) => {
-              if (response.value) {
+              if (response.result) {
                 this.step2.controls.email.setErrors({ 'already': true });
               }
             },
-            (error) => { console.log(error) }
+            (error) => { console.log(error); }
           );
         }
       });
@@ -101,11 +130,11 @@ export class SignUpComponent implements OnInit {
         if (value.length > 0 && this.step3.controls.nickname.valid) {
           this._network.request('check-nickname', value).subscribe(
             (response) => {
-              if (response.value) {
+              if (response.result) {
                 this.step3.controls.nickname.setErrors({ 'already': true });
               }
             },
-            (error) => { console.log(error) }
+            (error) => { console.log(error); }
           );
         }
       });
@@ -113,9 +142,9 @@ export class SignUpComponent implements OnInit {
 
   private _validateConfirmPassword(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
-      let result: {} = null;
+      let result: any = null;
       if (this.step2) {
-        if (this.step2.value.password !== control.value) {
+        if (this.account.password !== control.value) {
           let value = { 'confirm': true };
           result = result ? { ...result, ...value } : value;
         }
@@ -131,15 +160,15 @@ export class SignUpComponent implements OnInit {
   public checkError(name: string, error?: string): boolean {
     switch (name.toLowerCase()) {
       case 'agreement':
-        return !this.step1.value.checkTOS || !this.step1.value.checkPP;
+        return !this.agreement.termsOfService || !this.agreement.privacyPolicy;
       case 'password':
         switch (error) {
           case 'minlength':
             return this.step2.controls.password.hasError('minlength') ||
-              this.step2.value.password.length === 0;
+              this.account.password.length === 0;
           case 'maxlength':
             return this.step2.controls.password.hasError('maxlength') ||
-              this.step2.value.password.length === 0;
+              this.account.password.length === 0;
           case 'alphabet':
             return this.step2.controls.password.hasError('alphabet');
           case 'number':
@@ -151,17 +180,17 @@ export class SignUpComponent implements OnInit {
         switch (error) {
           case 'minlength':
             return this.step3.controls.nickname.hasError('minlength') ||
-              this.step3.value.nickname.length === 0;
+              this.personal.nickname.length === 0;
           case 'maxlength':
             return this.step3.controls.nickname.hasError('maxlength') ||
-              this.step3.value.nickname.length === 0;
+              this.personal.nickname.length === 0;
           case 'first':
             return this.step3.controls.nickname.hasError('first');
           case 'letter':
             return this.step3.controls.nickname.hasError('letter');
           case 'already':
             return this.step3.controls.nickname.hasError('already') ||
-              this.step3.value.nickname.length === 0;
+              this.personal.nickname.length === 0;
         }
         break;
     }
@@ -169,7 +198,7 @@ export class SignUpComponent implements OnInit {
   }
 
   public openTermsDialog(index: number): void {
-    let title: string = '';
+    let title = '';
     switch (index) {
       case 1:
         title = this.text.terms_of_service;
@@ -187,27 +216,37 @@ export class SignUpComponent implements OnInit {
   }
 
   public clickCheckAll(): void {
-    if (this.step1.value.checkAll) {
-      this.step1.controls.checkTOS.setValue(true);
-      this.step1.controls.checkPP.setValue(true);
-      this.step1.controls.checkUL.setValue(true);
-    } else {
-      this.step1.controls.checkTOS.setValue(false);
-      this.step1.controls.checkPP.setValue(false);
-      this.step1.controls.checkUL.setValue(false);
-    }
+    this.agreement.termsOfService = this.step1.value.checkAll;
+    this.agreement.privacyPolicy = this.step1.value.checkAll;
+    this.agreement.userLocation = this.step1.value.checkAll;
   }
 
   public clickCheck(): void {
     this.step1.controls.checkAll.setValue(
-      this.step1.value.checkTOS &&
-      this.step1.value.checkPP &&
-      this.step1.value.checkUL
+      this.agreement.termsOfService &&
+      this.agreement.privacyPolicy &&
+      this.agreement.userLocation
     );
   }
 
   public submit(): void {
-    alert('111');
+    this.loadingHeight = this._elementRef.nativeElement.querySelector('mat-vertical-stepper').offsetHeight;
+    this._index = 0;
+    let data = {
+      agreement: this.agreement,
+      account: this.account,
+      personal: this.personal
+    };
+    this._network.request('sign-up', '', data).subscribe(
+      (response) => {
+        if (response.result) {
+          this._index = 2;
+        } else {
+          this._index = 3;
+        }
+      },
+      (error) => { console.log(error); }
+    );
   }
 
 }

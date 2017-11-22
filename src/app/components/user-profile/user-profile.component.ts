@@ -24,7 +24,7 @@ export class UserProfileComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this._nickname = 'Shiba Inu';
     this._account = 'shiba_inu';
     this._picURL = 'https://material.angular.io/assets/img/examples/shiba1.jpg';

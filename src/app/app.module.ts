@@ -12,7 +12,7 @@ import { AngularMaterialModule } from './modules/angular-material/angular-materi
 
 import { KMatDateInputComponent } from './components/k-mat-date-input/k-mat-date-input.component';
 import { KMatNoticeTextComponent } from './components/k-mat-notice-text/k-mat-notice-text.component';
-import { KMatRadiosComponent } from './components/k-mat-radios/k-mat-radios.component';
+import { KMatRadioGroupComponent } from './components/k-mat-radio-group/k-mat-radio-group.component';
 
 import { DialogComponent } from './components/dialog/dialog.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -29,7 +29,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     AppComponent,
     KMatDateInputComponent,
     KMatNoticeTextComponent,
-    KMatRadiosComponent,
+    KMatRadioGroupComponent,
     DialogComponent,
     FooterComponent,
     HomeComponent,

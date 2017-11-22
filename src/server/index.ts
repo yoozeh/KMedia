@@ -31,7 +31,7 @@ app.get('/!/check-email/:target', (request, response) => {
   if (SAMPLE.findIndex((element) => { return element === request.params.target }) !== -1) {
     result = true;
   }
-  response.send({ value: result });
+  response.send({ result: result });
 });
 
 app.get('/!/check-nickname/:target', (request, response) => {
@@ -43,7 +43,12 @@ app.get('/!/check-nickname/:target', (request, response) => {
   if (SAMPLE.findIndex((element) => { return element === request.params.target }) !== -1) {
     result = true;
   }
-  response.send({ value: result });
+  response.send({ result: result });
+});
+
+app.post('/!/sign-up', (request, response) => {
+  console.log(request.body);
+  response.send({ result: 'done' });
 });
 
 app.all('*', (request, response) => {

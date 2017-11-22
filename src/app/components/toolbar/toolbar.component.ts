@@ -18,20 +18,14 @@ export class ToolbarComponent implements OnInit {
     @Inject(APP_TEXT) public text: KT_JSON
   ) { }
 
-  ngOnInit(): void { }
+  public ngOnInit(): void { }
 
-  onMenu(): void {
+  public onMenu(): void {
     this.eventEmitter.emit('toggle');
   }
 
-  onLogo(): void {
+  public onLogo(): void {
     this._router.navigate(['']);
-  }
-
-  onLogin(): void { }
-
-  onJoin(): void {
-    this._router.navigate(['sign-up']);
   }
 
 }

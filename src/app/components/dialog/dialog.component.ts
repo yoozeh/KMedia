@@ -12,6 +12,6 @@ export class DialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
-  ngOnInit(): void { }
+  public ngOnInit(): void { }
 
 }

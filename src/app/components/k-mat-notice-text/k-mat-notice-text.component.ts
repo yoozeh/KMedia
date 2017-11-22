@@ -7,17 +7,20 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class KMatNoticeTextComponent implements OnInit {
 
-  @Input()
-  public size: number = 1;
+  @Input('status')
+  private _status: string = 'success';
+  get status(): string {
+    return this._status;
+  }
 
-  @Input()
-  public status: string = 'success';
-
-  @Input()
-  public text: string = '';
+  @Input('size')
+  private _size: number = 1;
+  get size(): number {
+    return this._size;
+  }
 
   get icon(): string {
-    switch (this.status) {
+    switch (this._status) {
       case 'success':
         return 'done'
       case 'danger':
@@ -28,6 +31,6 @@ export class KMatNoticeTextComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void { }
+  public ngOnInit(): void { }
 
 }

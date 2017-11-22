@@ -10,7 +10,7 @@ export class KValidator {
     pattern: { [key: string]: RegExp | ((value: string) => boolean) }
   ): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
-      let result: {} = null;
+      let result: any = null;
       let check: boolean;
       let error: { [key: string]: boolean };
       for (let key in pattern) {

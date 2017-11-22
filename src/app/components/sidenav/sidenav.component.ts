@@ -23,7 +23,7 @@ export class SidenavComponent implements OnInit {
     @Inject(APP_TEXT) public text: KT_JSON
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this._menu = [
       {
         title: "Menu Title 1",

@@ -25,7 +25,7 @@
   "sign_up_step3": "Step 3",
   "sign_up_step3_title": "Personal",
   "sign_up_step4": "Done",
-  "sign_up_step4_title": "",
+  "sign_up_step4_title": "Check your information",
 
   "sign_in": "Sign In",
   "sign_in_description": "Input sign-in informations",
@@ -71,17 +71,17 @@
   "month": "Month",
   "day": "Day",
   "months": [
-    { "text": "January", "count": 31 },
-    { "text": "February", "count": 29 },
-    { "text": "March", "count": 31 },
-    { "text": "April", "count": 30 },
-    { "text": "May", "count": 31 },
-    { "text": "June", "count": 30 },
-    { "text": "July", "count": 31 },
-    { "text": "August", "count": 31 },
-    { "text": "September", "count": 30 },
-    { "text": "October", "count": 31 },
-    { "text": "November", "count": 30 },
-    { "text": "December", "count": 31 }
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
   ]
 }

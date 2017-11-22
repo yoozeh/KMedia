@@ -36,3 +36,12 @@
 .include-message {
   margin-bottom: 48px;
 }
+
+.img-welcome {
+  width: 90%;
+  height: 90%;
+}
+
+.text-welcome {
+  font-size: 2em;
+}

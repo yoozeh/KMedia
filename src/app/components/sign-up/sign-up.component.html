@@ -2,7 +2,12 @@
   <div class="container">
     <h1>{{ text.sign_up }}</h1>
     <mat-card>
-      <mat-vertical-stepper>
+
+      <div *ngIf="index === 0" [style.height.px]="loadingHeight" fxLayoutAlign="center center">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      </div>
+
+      <mat-vertical-stepper linear *ngIf="index === 1">
 
         <!-- Sign up Step 1 -->
         <mat-step [stepControl]="step1">
@@ -17,7 +22,8 @@
               </div>
 
               <div class="row" fxLayout="row" fxLayoutAlign="start center">
-                <k-mat-notice-text [size]="0.8" [status]="checkError('agreement') ? 'danger' : 'success'" [text]="text.sign_up_step1_error">
+                <k-mat-notice-text [size]="0.8" [status]="checkError('agreement') ? 'danger' : 'success'">
+                  {{ text.sign_up_step1_error }}
                 </k-mat-notice-text>
               </div>
 
@@ -25,14 +31,14 @@
                 <div fxFlex>
                   <button mat-button class="button-term" (click)="openTermsDialog(1)">{{ text.terms_of_service }}</button>
                 </div>
-                <mat-checkbox formControlName="checkTOS" (change)="clickCheck()" required></mat-checkbox>
+                <mat-checkbox formControlName="checkTOS" [(ngModel)]="agreement.termsOfService" (change)="clickCheck()" required></mat-checkbox>
               </div>
 
               <div class="row" fxLayout="row" fxLayoutAlign="center center">
                 <div fxFlex>
                   <button mat-button class="button-term" (click)="openTermsDialog(2)">{{ text.privacy_policy }}</button>
                 </div>
-                <mat-checkbox formControlName="checkPP" (change)="clickCheck()" required></mat-checkbox>
+                <mat-checkbox formControlName="checkPP" [(ngModel)]="agreement.privacyPolicy" (change)="clickCheck()" required></mat-checkbox>
               </div>
 
               <div class="row" fxLayout="row" fxLayoutAlign="center center">
@@ -42,7 +48,7 @@
                     <span class="text-option">({{ text.option }})</span>
                   </button>
                 </div>
-                <mat-checkbox formControlName="checkUL" (change)="clickCheck()"></mat-checkbox>
+                <mat-checkbox formControlName="checkUL" [(ngModel)]="agreement.userLocation" (change)="clickCheck()"></mat-checkbox>
               </div>
 
             </div>
@@ -64,7 +70,7 @@
               <div class="row" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.email }}</label>
                 <mat-form-field fxFlex>
-                  <input matInput formControlName="email" placeholder="{{ text.email_placeholder }}" required>
+                  <input matInput formControlName="email" [(ngModel)]="account.email" placeholder="{{ text.email_placeholder }}" required>
                   <mat-error *ngIf="step2.controls.email.hasError('required')">{{ text.require }}</mat-error>
                   <mat-error *ngIf="step2.controls.email.hasError('invalid')">{{ text.email_error.invalid }}</mat-error>
                   <mat-error *ngIf="step2.controls.email.hasError('already')">{{ text.email_error.already }}</mat-error>
@@ -74,18 +80,23 @@
               <div class="row include-message" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.password }}</label>
                 <mat-form-field fxFlex>
-                  <input matInput formControlName="password" placeholder="{{ text.password_placeholder }}" [type]="isHidePassword ? 'password' : 'text'"
+                  <input matInput formControlName="password" [(ngModel)]="account.password" placeholder="{{ text.password_placeholder }}" [type]="isHidePassword ? 'password' : 'text'"
                     required>
                   <mat-hint fxLayout="column">
-                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'minlength') ? 'danger' : 'success'" [text]="text.password_error.minlength">
+                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'minlength') ? 'danger' : 'success'">
+                      {{ text.password_error.minlength }}
                     </k-mat-notice-text>
-                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'maxlength') ? 'danger' : 'success'" [text]="text.password_error.maxlength">
+                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'maxlength') ? 'danger' : 'success'">
+                      {{ text.password_error.maxlength }}
                     </k-mat-notice-text>
-                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'alphabet') ? 'danger' : 'success'" [text]="text.password_error.letter">
+                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'alphabet') ? 'danger' : 'success'">
+                      {{ text.password_error.letter }}
                     </k-mat-notice-text>
-                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'number') ? 'danger' : 'success'" [text]="text.password_error.number">
+                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'number') ? 'danger' : 'success'">
+                      {{ text.password_error.number }}
                     </k-mat-notice-text>
-                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'special') ? 'danger' : 'success'" [text]="text.password_error.special">
+                    <k-mat-notice-text [size]="1" [status]="checkError('password', 'special') ? 'danger' : 'success'">
+                      {{ text.password_error.special }}
                     </k-mat-notice-text>
                   </mat-hint>
                 </mat-form-field>
@@ -124,17 +135,23 @@
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.nickname }}</label>
                 <mat-form-field fxFlex>
                   <span matPrefix>@</span>
-                  <input matInput formControlName="nickname" placeholder="{{ text.nickname_placeholder }}" required>
+                  <input matInput formControlName="nickname" [(ngModel)]="personal.nickname" placeholder="{{ text.nickname_placeholder }}"
+                    required>
                   <mat-hint fxLayout="column">
-                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'minlength') ? 'danger' : 'success'" [text]="text.nickname_error.minlength">
+                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'minlength') ? 'danger' : 'success'">
+                      {{ text.nickname_error.minlength }}
                     </k-mat-notice-text>
-                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'maxlength') ? 'danger' : 'success'" [text]="text.nickname_error.maxlength">
+                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'maxlength') ? 'danger' : 'success'">
+                      {{ text.nickname_error.maxlength }}
                     </k-mat-notice-text>
-                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'first') ? 'danger' : 'success'" [text]="text.nickname_error.first">
+                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'first') ? 'danger' : 'success'">
+                      {{ text.nickname_error.first }}
                     </k-mat-notice-text>
-                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'letter') ? 'danger' : 'success'" [text]="text.nickname_error.letter">
+                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'letter') ? 'danger' : 'success'">
+                      {{ text.nickname_error.letter }}
                     </k-mat-notice-text>
-                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'already') ? 'danger' : 'success'" [text]="text.nickname_error.already">
+                    <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'already') ? 'danger' : 'success'">
+                      {{ text.nickname_error.already }}
                     </k-mat-notice-text>
                   </mat-hint>
                 </mat-form-field>
@@ -143,21 +160,22 @@
               <div class="row" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.name }}</label>
                 <mat-form-field fxFlex>
-                  <input matInput formControlName="name" placeholder="{{ text.name_placeholder }}">
+                  <input matInput formControlName="name" [(ngModel)]="personal.name" placeholder="{{ text.name_placeholder }}">
                 </mat-form-field>
               </div>
 
               <div class="row" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.gender }}</label>
                 <mat-form-field fxFlex>
-                  <k-mat-radios formControlName="gender" placeholder="{{ text.gender }}" [items]="gender"></k-mat-radios>
+                  <k-mat-radio-group formControlName="gender" [(ngModel)]="personal.gender" placeholder="{{ text.gender }}" [items]="gender">
+                  </k-mat-radio-group>
                 </mat-form-field>
               </div>
 
               <div class="row" fxLayout="row">
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.birth_date }}</label>
                 <mat-form-field fxFlex>
-                  <k-mat-date-input formControlName="birthDate" [startyear]="1950" placeholder="{{ text.birth_date_placeholder }}"></k-mat-date-input>
+                  <k-mat-date-input formControlName="birthDate" [(ngModel)]="personal.birth" [startyear]="1950" placeholder="{{ text.birth_date_placeholder }}"></k-mat-date-input>
                 </mat-form-field>
               </div>
 
@@ -173,11 +191,37 @@
         <!-- Sign up Step 4 -->
         <mat-step>
           <ng-template matStepLabel>
-            {{ text.sign_up_step4 }}: {{ text.sign_up_step4_title }}
+            {{ text.sign_up_step4 }}
           </ng-template>
           <div ngClass.xs="container-step-xs" ngClass.gt-xs="container-step">
 
-            Content 4
+            <mat-card>
+              <mat-card-header>
+                {{ text.sign_up_step4_title }}
+              </mat-card-header>
+              <br>
+              <mat-card-content>
+                <mat-list>
+                  <mat-divider></mat-divider>
+                  <br>
+                  <mat-list-item>
+                    <mat-icon>email</mat-icon>&nbsp;&nbsp; {{ account.email }}
+                  </mat-list-item>
+                  <mat-list-item>
+                    <mat-icon>vpn_key</mat-icon>&nbsp;&nbsp; @{{ personal.nickname }}
+                  </mat-list-item>
+                  <mat-list-item *ngIf="personal.name.length > 0">
+                    <mat-icon>person</mat-icon>&nbsp;&nbsp; {{ personal.name }}
+                  </mat-list-item>
+                  <mat-list-item *ngIf="personal.gender.length > 0">
+                    <mat-icon>favorite</mat-icon>&nbsp;&nbsp; {{ personal.gender }}
+                  </mat-list-item>
+                  <mat-list-item *ngIf="personal.birth.length > 0">
+                    <mat-icon>date_range</mat-icon>&nbsp;&nbsp; {{ personal.birth }}
+                  </mat-list-item>
+                </mat-list>
+              </mat-card-content>
+            </mat-card>
 
           </div>
 
@@ -188,6 +232,17 @@
         </mat-step>
 
       </mat-vertical-stepper>
+
+      <div *ngIf="index === 2" fxLayout="column" fxLayoutAlign="center center">
+        <img class="img-welcome" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Thank-you-word-cloud.jpg">
+        <mat-card-content>
+          <p class="text-welcome">Thanks for signing up</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button>Okay</button>
+        </mat-card-actions>
+      </div>
+
     </mat-card>
   </div>
 </div>

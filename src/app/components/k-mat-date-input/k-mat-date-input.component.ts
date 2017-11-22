@@ -1,88 +1,84 @@
-import { Component, OnInit, OnDestroy, Input, ElementRef, Renderer2 } from '@angular/core';
-import { FormBuilder, FormGroup, NgControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy, Input, forwardRef, ElementRef, Renderer2 } from '@angular/core';
+import { FormBuilder, FormGroup, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Subject, Observable } from 'rxjs';
 import { debounceTime, startWith, map } from 'rxjs/operators';
-
-export type KT_DATE_VALUE = { year: string, month: string, day: string };
 
 @Component({
   selector: 'k-mat-date-input',
   templateUrl: './k-mat-date-input.component.html',
   styleUrls: ['./k-mat-date-input.component.css'],
-  providers: [{ provide: MatFormFieldControl, useExisting: KMatDateInputComponent }],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => KMatDateInputComponent),
+      multi: true
+    },
+    { provide: MatFormFieldControl, useExisting: KMatDateInputComponent }
+  ],
   host: {
+    '[id]': '_id',
     '[class.floating]': 'shouldPlaceholderFloat',
-    '[id]': 'id',
-    '[attr.aria-describedby]': 'describedBy'
+    '[attr.aria-describedby]': '_describedBy'
   }
 })
-export class KMatDateInputComponent implements OnInit, OnDestroy, MatFormFieldControl<KT_DATE_VALUE> {
+export class KMatDateInputComponent implements OnInit, OnDestroy, ControlValueAccessor, MatFormFieldControl<string> {
 
-  private static _listMonth: Array<string> = Array.from(
-    { length: 12 },
-    (_, key) => (key + 1).toString()
-  );
-  private static _listDay: Array<string> = Array.from(
-    { length: 31 },
-    (_, key) => (key + 1).toString()
-  );
-  public static isLeapYear(year: number): boolean {
-    year = parseInt(year.toString());
-    return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+  //ControlValueAccessor
+  private _value: { year: string, month: string, day: string } = {
+    year: '',
+    month: '',
+    day: ''
+  }
+  get value(): string {
+    let result = this._value.year;
+    result += '-' + (this._value.month.length === 1 ? '0' : '') + this._value.month;
+    result += '-' + (this._value.day.length === 1 ? '0' : '') + this._value.day;
+    return result;
+  }
+  set value(value: string) {
+    let regExp = /[\d]{4}\-[\d]{1,2}\-[\d]{1,2}/;
+    if (value && regExp.test(value)) {
+      let split = value.split('-');
+      let year = Number(split[0]);
+      let month = Number(split[1]);
+      let day = Number(split[2]);
+      if (year < this._startYear || year > this._endYear) {
+        return;
+      }
+      if (month < 1 || month > 12) {
+        return;
+      }
+      let lastMonthDay = KMatDateInputComponent.getLastMonthDay(year, month);
+      if (day < 1 || day > lastMonthDay) {
+        return;
+      }
+      this._value = { year: split[0], month: split[1], day: split[2] }
+      this._onChange(this.value);
+      this.stateChanges.next();
+    }
   }
 
-  private static _nextID: number = 0;
-
-  private _controlType: string = 'k-mat-birth-date';
-  private _describedBy: string = '';
-
-  public ngControl: NgControl | null = null;
-  public id: string = `${this._controlType}-${KMatDateInputComponent._nextID++}`;
-  public focused: boolean = false;
-  public errorState: boolean = false;
-  public stateChanges: Subject<void> = new Subject<void>();
-
-  get empty(): boolean {
-    let value: any = this.formGroup.value;
-    return !value.year && !value.month && !value.day;
+  public writeValue(value: any) {
+    if (value !== undefined) {
+      this.value = value;
+    }
   }
 
-  get shouldPlaceholderFloat(): boolean {
-    return this.focused || !this.empty;
+  private _onChange: (_: any) => void = (_: any) => { };
+  public registerOnChange(fn: (_: any) => void): void {
+    this._onChange = fn;
   }
 
-  private _placeholder: string;
-  @Input()
-  get placeholder(): string {
-    return this._placeholder;
-  }
-  set placeholder(placeholder: string) {
-    this._placeholder = placeholder;
-    this.stateChanges.next();
+  private _onTouched: any = {};
+  public registerOnTouched(fn: any): void {
+    this._onTouched = fn;
   }
 
-  private _required: boolean = false;
-  @Input()
-  get required(): boolean {
-    return this._required;
-  }
-  set required(required: boolean) {
-    this._required = coerceBooleanProperty(required);
-    this.stateChanges.next();
-  }
-
-  private _disabled: boolean = false;
-  @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(disabled: boolean) {
-    this._disabled = coerceBooleanProperty(disabled);
-    this.stateChanges.next();
-    if (this._disabled) {
+  public setDisabledState(isDisabled: boolean): void {
+    if (isDisabled) {
       this.formGroup.controls.year.disable();
       this.formGroup.controls.month.disable();
       this.formGroup.controls.day.disable();
@@ -93,25 +89,130 @@ export class KMatDateInputComponent implements OnInit, OnDestroy, MatFormFieldCo
     }
   }
 
-  @Input()
-  get value(): KT_DATE_VALUE | null {
-    let value = this.formGroup.value;
-    if (value.year.length === 4 &&
-      value.month.length > 0 && value.month.length <= 2 &&
-      value.day.length > 0 && value.day.length <= 2) {
-      return { year: value.year, month: value.month, day: value.day };
-    }
-    return null;
+  //MatFormFieldControl
+  private static _nextID: number = 0;
+  private static _control: string = "k-mat-date-input";
+
+  private _stateChanges: Subject<void> = new Subject<void>();
+  get stateChanges(): Subject<void> {
+    return this._stateChanges;
   }
-  set value(value: KT_DATE_VALUE | null) {
-    value = value || { year: '', month: '', day: '' };
-    this.formGroup.setValue({
-      year: value.year,
-      month: value.month,
-      day: value.day
-    });
+
+  private _id: string = `${KMatDateInputComponent._control}-${KMatDateInputComponent._nextID++}`;
+  get id(): string {
+    return this._id;
+  }
+
+  private _placeholder: string = '';
+  @Input()
+  get placeholder(): string {
+    return this._placeholder;
+  }
+  set placeholder(value: string) {
+    this._placeholder = value;
     this.stateChanges.next();
   }
+
+  private _ngControl: NgControl | null = null;
+  get ngControl(): NgControl | null {
+    return this._ngControl;
+  }
+
+  private _focused: boolean = false;
+  get focused(): boolean {
+    return this._focused;
+  }
+  set focused(value: boolean) {
+    this._focused = value;
+  }
+
+  get empty(): boolean {
+    let value = this.formGroup.value;
+    return !value.year || !value.month || !value.day;
+  }
+
+  get shouldPlaceholderFloat(): boolean {
+    return this.focused || !this.empty;
+  }
+
+  private _required: boolean = false;
+  @Input()
+  get required(): boolean {
+    return this._required;
+  }
+  set required(value: boolean) {
+    this._required = coerceBooleanProperty(value);
+    this.stateChanges.next();
+  }
+
+  private _disabled: boolean = false;
+  @Input()
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(value: boolean) {
+    this._disabled = coerceBooleanProperty(value);
+    this.setDisabledState(this._disabled);
+    this.stateChanges.next();
+  }
+
+  get errorState(): boolean {
+    return false;
+  }
+
+  private _controlType: string = KMatDateInputComponent._control;
+
+  private _describedBy: string = '';
+  public setDescribedByIds(ids: string[]): void {
+    this._describedBy = ids.join('');
+  }
+
+  public onContainerClick(event: MouseEvent): void {
+    if ((event.target as Element).tagName.toLowerCase() != 'input') {
+      this._elementRef.nativeElement.querySelector('input').focus();
+    }
+  }
+
+  //this
+  private static _listMonth: Array<string> = Array.from(
+    { length: 12 },
+    (_, key) => (key + 1).toString()
+  );
+  private static _listDay: Array<string> = Array.from(
+    { length: 31 },
+    (_, key) => (key + 1).toString()
+  );
+  public static isLeapYear(year: number): boolean {
+    return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+  }
+  public static getLastMonthDay(year: number, month: number): number {
+    if (year < 0 || year != parseInt(year.toString())) {
+      return 0;
+    }
+    if (month < 1 || month > 12) {
+      return 0;
+    }
+    let isLeapYear = KMatDateInputComponent.isLeapYear(year);
+    let result = 31;
+    switch (month) {
+      case 2:
+        result = isLeapYear ? 29 : 28;
+        break;
+      case 4:
+      case 6:
+      case 9:
+      case 11:
+        result = 30;
+        break;
+    }
+    return result;
+  }
+
+  @Input('startyear')
+  private _startYear: number = 1900;
+
+  @Input('endyear')
+  private _endYear: number = new Date().getFullYear();
 
   public formGroup: FormGroup;
   public filtered: { [key: string]: Observable<string[]> } = {
@@ -119,76 +220,62 @@ export class KMatDateInputComponent implements OnInit, OnDestroy, MatFormFieldCo
     month: null,
     day: null
   };
-
-  @Input()
-  public startyear: number = 1900;
-
-  @Input()
-  public endyear: number = new Date().getFullYear();
-
   private _listYear: Array<string>;
   private _prevLastDay: number = 0;
+  private _prevValue = {
+    year: '',
+    month: '',
+    day: ''
+  }
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef,
+    private _focusMonitor: FocusMonitor,
     private _renderer: Renderer2
   ) {
-    this.formGroup = _formBuilder.group({ 'year': '', 'month': '', 'day': '', });
+    this.formGroup = _formBuilder.group({
+      'year': '',
+      'month': '',
+      'day': '',
+    });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this._focusMonitor.monitor(this._elementRef.nativeElement, this._renderer, true)
       .subscribe((origin) => {
         this.focused = !!origin;
         this.stateChanges.next();
       });
     this._listYear = Array.from(
-      { length: this.endyear - this.startyear + 1 },
-      (_, key) => (this.endyear - key).toString()
+      { length: this._endYear - this._startYear + 1 },
+      (_, key) => (this._endYear - key).toString()
     );
     this._applyFilter();
+    this.formGroup.controls.year.valueChanges.subscribe((value) => {
+      this._value.year = value;
+      this._onChange(this.value);
+    });
+    this.formGroup.controls.month.valueChanges.subscribe((value) => {
+      this._value.month = value;
+      this._onChange(this.value);
+    });
+    this.formGroup.controls.day.valueChanges.subscribe((value) => {
+      this._value.day = value;
+      this._onChange(this.value);
+    });
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.stateChanges.complete();
     this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
   }
 
-  setDescribedByIds(ids: string[]): void {
-    this._describedBy = ids.join(' ');
-  }
-
-  onContainerClick(event: MouseEvent): void {
-    if ((event.target as Element).tagName.toLowerCase() != 'input') {
-      this._elementRef.nativeElement.querySelector('input').focus();
-    }
-  }
-
   private _applyLastDay(): void {
-    let year: number = Number(this.formGroup.controls.year.value);
-    let month: number = Number(this.formGroup.controls.month.value);
-    let isLeapYear: boolean = KMatDateInputComponent.isLeapYear(Number(year));
-    let array: Array<string>;
-    switch (month) {
-      case 2:
-        if (isLeapYear) {
-          array = KMatDateInputComponent._listDay.slice(0, -2);
-        } else {
-          array = KMatDateInputComponent._listDay.slice(0, -3);
-        }
-        break;
-      case 4:
-      case 6:
-      case 9:
-      case 11:
-        array = KMatDateInputComponent._listDay.slice(0, -1);
-        break;
-      default:
-        array = KMatDateInputComponent._listDay;
-        break;
-    }
+    let year = Number(this.formGroup.controls.year.value);
+    let month = Number(this.formGroup.controls.month.value);
+    let lastMonthDay = KMatDateInputComponent.getLastMonthDay(year, month);
+    let array = KMatDateInputComponent._listDay.slice(0, lastMonthDay - 31);
     if (this._prevLastDay !== array.length) {
       this._prevLastDay = array.length;
       this.filtered.day = this.formGroup.controls.day.valueChanges
@@ -221,5 +308,46 @@ export class KMatDateInputComponent implements OnInit, OnDestroy, MatFormFieldCo
       return option.toLowerCase().indexOf(value.toLowerCase()) === 0;
     });
   }
+
+  public keyPressNumber(event: any) {
+    const pattern = /[\d]/;
+    if (!pattern.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  /*
+  public keyPressYear(event: any) {
+    if (!/[\d]/.test(event.key)) {
+      event.preventDefault();
+    }
+    let value = event.target.value;
+    let selectionStart = event.target.selectionStart;
+    let selectionEnd = event.target.selectionEnd;
+    let result = value.slice(0, selectionStart) + event.key + value.slice(selectionEnd);
+    const number = Number(result);
+    console.log(event);
+    if (number > this._endYear) {
+      event.preventDefault();
+    }
+  }
+  public keyPressMonth(event: any) {
+    const pattern = /[\d]/;
+    if (!pattern.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+  public keyPressDay(event: any) {
+    const pattern = /^[\d]{,2}$/;
+    const string = event.target.value;
+    const number = Number(string);
+    let lastMonthDay = KMatDateInputComponent.getLastMonthDay(
+      Number(this._value.year), Number(this._value.month)
+    );
+    if (!pattern.test(string) || number < 1 || number > lastMonthDay) {
+      event.preventDefault()
+    }
+  }
+  */
 
 }

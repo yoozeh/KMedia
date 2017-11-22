@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { KMatRadiosComponent } from './k-mat-radios.component';
+import { KMatRadioGroupComponent } from './k-mat-radio-group.component';
 
-describe('KMatRadiosComponent', () => {
-  let component: KMatRadiosComponent;
-  let fixture: ComponentFixture<KMatRadiosComponent>;
+describe('KMatRadioGroupComponent', () => {
+  let component: KMatRadioGroupComponent;
+  let fixture: ComponentFixture<KMatRadioGroupComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ KMatRadiosComponent ]
+      declarations: [ KMatRadioGroupComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(KMatRadiosComponent);
+    fixture = TestBed.createComponent(KMatRadioGroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

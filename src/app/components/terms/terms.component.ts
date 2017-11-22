@@ -12,8 +12,8 @@ import { NetworkService } from '../../services/network.service';
 })
 export class TermsComponent implements OnInit {
 
-  @Input()
-  public index: number;
+  @Input('index')
+  private _index: number;
 
   private _md: MarkdownIt.MarkdownIt;
 
@@ -32,7 +32,7 @@ export class TermsComponent implements OnInit {
     @Inject(APP_TEXT) public text: KT_JSON
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this._md = new MarkdownIt({
       html: true,
       //linkify: true,
@@ -40,7 +40,7 @@ export class TermsComponent implements OnInit {
     });
     this._isLoading = true;
     let filename: string = null;
-    switch (this.index) {
+    switch (this._index) {
       case 1:
         filename = this.text.file_terms_of_service;
         break;
@@ -57,7 +57,7 @@ export class TermsComponent implements OnInit {
           this._contents = this._md.render(response);
           this._isLoading = false;
         },
-        (error) => { console.log(error) }
+        (error) => { console.log(error); }
       );
     }
   }

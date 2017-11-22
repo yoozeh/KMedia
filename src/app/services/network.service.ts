@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { retry, debounceTime } from 'rxjs/operators';
 
 import { KT_JSON, APP_CONFIG } from '../app.environments.service';
 
@@ -14,14 +13,17 @@ export class NetworkService {
   ) { }
 
   public request(request: string, target: string, data?: any): Observable<any> {
-    let url = this._configure.httpAddress + '/' + this._configure.path_request + '/' + request + '/';
+    let url = this._configure.httpAddress + '/' + this._configure.path_request + '/' + request;
+    let headers: HttpHeaders;
     switch (request.toLowerCase()) {
       case 'textfile':
-        return this._http.get(url + target, { responseType: 'text' }).pipe(retry(3));
+        return this._http.get(url + '/' + target, { responseType: 'text' });
       case 'check-email':
-        return this._http.get(url + target, { responseType: 'json' });
+        return this._http.get(url + '/' + target, { responseType: 'json' });
       case 'check-nickname':
-        return this._http.get(url + target, { responseType: 'json' });
+        return this._http.get(url + '/' + target, { responseType: 'json' });
+      case 'sign-up':
+        return this._http.post(url, data, { responseType: 'json' });
     }
     return null;
   }
