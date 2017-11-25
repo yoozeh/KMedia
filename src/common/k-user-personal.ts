@@ -17,11 +17,11 @@ export class KUserPersonal implements IKUserPersonal {
 
   protected _birth: Date;
   get birth(): Date {
-    return this._birth;
+    return new Date(this._birth);
   }
   set birth(value: Date) {
     if (value) {
-      this._birth = new Date(value.toLocaleDateString());
+      this._birth = new Date(value.toJSON());
     } else {
       this._birth = value;
     }
@@ -44,7 +44,7 @@ export class KUserPersonal implements IKUserPersonal {
         this.name = privacy.name;
       }
       if (privacy.birth) {
-        this.birth = privacy.birth;
+        this.birth = new Date(privacy.birth);
       }
       if (privacy.gender) {
         this.gender = privacy.gender;
@@ -58,7 +58,7 @@ export class KUserPersonal implements IKUserPersonal {
       result = { ...result, "name": this.name };
     }
     if (this.birth) {
-      result = { ...result, "birth": this.birth.toLocaleDateString() };
+      result = { ...result, "birth": this.birth.toJSON() };
     }
     if (this.gender) {
       result = { ...result, "gender": this.gender };

@@ -33,6 +33,7 @@ export class KMatRadioGroupComponent implements OnInit, OnDestroy, ControlValueA
   }
   set value(value: string) {
     this._value = value;
+    this.formControl.setValue(this._value);
     this._onChange(this.value);
     this.stateChanges.next();
   }
@@ -151,7 +152,9 @@ export class KMatRadioGroupComponent implements OnInit, OnDestroy, ControlValueA
 
   public ngOnInit(): void {
     this.formControl.valueChanges.subscribe((value) => {
-      this.value = value;
+      this._value = value;
+      this._onChange(this.value);
+      this.stateChanges.next();
     });
   }
 

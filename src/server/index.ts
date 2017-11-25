@@ -6,6 +6,10 @@ import * as cors from 'cors';
 import * as compression from 'compression';
 import * as bodyParser from 'body-parser';
 
+import { Database } from './database';
+import { KUser } from '../common/k-user';
+
+
 const port = process.env.PORT || 8000;
 const app = express();
 const httpServer = http.createServer(app);
@@ -24,10 +28,7 @@ app.get('/!/textfile/:target', (request, response) => {
 
 app.get('/!/check-email/:target', (request, response) => {
   let result = false;
-  const SAMPLE = [
-    'test1@email.test',
-    'krad@email.test'
-  ];
+  const SAMPLE = [];
   if (SAMPLE.findIndex((element) => { return element === request.params.target }) !== -1) {
     result = true;
   }
@@ -36,10 +37,7 @@ app.get('/!/check-email/:target', (request, response) => {
 
 app.get('/!/check-nickname/:target', (request, response) => {
   let result = false;
-  const SAMPLE = [
-    'krad',
-    'yoozeh'
-  ];
+  const SAMPLE = [];
   if (SAMPLE.findIndex((element) => { return element === request.params.target }) !== -1) {
     result = true;
   }
@@ -47,8 +45,22 @@ app.get('/!/check-nickname/:target', (request, response) => {
 });
 
 app.post('/!/sign-up', (request, response) => {
-  console.log(request.body);
-  response.send({ result: 'done' });
+  try {
+    let agreement = request.body.fields.agreement;
+    if (!agreement || !agreement.termsOfService || !agreement.privacyPolicy) {
+      throw 'agreement';
+    }
+    if (request.body['personal.birth']) {
+      request.body.personal.birth = new Date(request.body.personal.birth);
+    }
+    let user = new KUser(request.body);
+    user.setField({ activated: false });
+    let db = new Database('../../json/db.json');
+    db.insert('users', user.toJSON());
+    response.send({ result: true });
+  } catch (error) {
+    response.send({ result: false, text: error });
+  }
 });
 
 app.all('*', (request, response) => {

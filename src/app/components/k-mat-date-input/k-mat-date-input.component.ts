@@ -55,7 +55,10 @@ export class KMatDateInputComponent implements OnInit, OnDestroy, ControlValueAc
       if (day < 1 || day > lastMonthDay) {
         return;
       }
-      this._value = { year: split[0], month: split[1], day: split[2] }
+      this._value = { year: split[0], month: split[1], day: split[2] };
+      this.formGroup.controls.year.setValue(this._value.year);
+      this.formGroup.controls.month.setValue(this._value.month);
+      this.formGroup.controls.day.setValue(this._value.day);
       this._onChange(this.value);
       this.stateChanges.next();
     }
@@ -255,14 +258,17 @@ export class KMatDateInputComponent implements OnInit, OnDestroy, ControlValueAc
     this.formGroup.controls.year.valueChanges.subscribe((value) => {
       this._value.year = value;
       this._onChange(this.value);
+      this.stateChanges.next();
     });
     this.formGroup.controls.month.valueChanges.subscribe((value) => {
       this._value.month = value;
       this._onChange(this.value);
+      this.stateChanges.next();
     });
     this.formGroup.controls.day.valueChanges.subscribe((value) => {
       this._value.day = value;
       this._onChange(this.value);
+      this.stateChanges.next();
     });
   }
 

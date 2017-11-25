@@ -1,0 +1,7 @@
+{
+  "source": "env",
+  "host": "k_db_host",
+  "name": "k_db_name",
+  "user": "k_db_user",
+  "password": "k_db_pass"
+}

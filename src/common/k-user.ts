@@ -13,7 +13,7 @@ export class KUser extends KFields implements IKUser {
 
   protected _account: KUserAccount;
   get account(): IKUserAccount {
-    return this._account;
+    return this._account.toJSON();
   }
   set account(value: IKUserAccount) {
     this._account = new KUserAccount(value);
@@ -21,10 +21,18 @@ export class KUser extends KFields implements IKUser {
 
   protected _personal: KUserPersonal;
   get personal(): IKUserPersonal {
-    return this._personal;
+    return this._personal.toJSON();
   }
   set personal(value: IKUserPersonal) {
     this._personal = new KUserPersonal(value);
+  }
+
+  protected _fields: KUserPersonal;
+  get fields(): any {
+    return JSON.parse(JSON.stringify(this._fields));
+  }
+  set fields(value: any) {
+    this._fields = JSON.parse(JSON.stringify(value));
   }
 
   constructor(user?: IKUser) {
@@ -42,16 +50,24 @@ export class KUser extends KFields implements IKUser {
     }
   }
 
+  public setField(value: any) {
+    this._fields = { ...this._fields, ...JSON.parse(JSON.stringify(value)) }
+  }
+
+  public removeField(value: string) {
+    delete this._fields[value];
+  }
+
   public toJSON(): any {
     let result: any = {};
     if (this.account) {
-      result = { ...result, "account": this.account.toJSON() };
+      result = { ...result, "account": this._account.toJSON() };
     }
     if (this.personal) {
-      result = { ...result, "personal": this.personal.toJSON() };
+      result = { ...result, "personal": this._personal.toJSON() };
     }
     if (this.fields) {
-      result = { ...result, "fields": this.fields };
+      result = { ...result, "fields": JSON.parse(JSON.stringify(this._fields)) };
     }
     return result;
   }

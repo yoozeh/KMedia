@@ -135,7 +135,7 @@
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.nickname }}</label>
                 <mat-form-field fxFlex>
                   <span matPrefix>@</span>
-                  <input matInput formControlName="nickname" [(ngModel)]="personal.nickname" placeholder="{{ text.nickname_placeholder }}"
+                  <input matInput formControlName="nickname" [(ngModel)]="account.nickname" placeholder="{{ text.nickname_placeholder }}"
                     required>
                   <mat-hint fxLayout="column">
                     <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'minlength') ? 'danger' : 'success'">
@@ -208,7 +208,7 @@
                     <mat-icon>email</mat-icon>&nbsp;&nbsp; {{ account.email }}
                   </mat-list-item>
                   <mat-list-item>
-                    <mat-icon>vpn_key</mat-icon>&nbsp;&nbsp; @{{ personal.nickname }}
+                    <mat-icon>vpn_key</mat-icon>&nbsp;&nbsp; @{{ account.nickname }}
                   </mat-list-item>
                   <mat-list-item *ngIf="personal.name.length > 0">
                     <mat-icon>person</mat-icon>&nbsp;&nbsp; {{ personal.name }}
@@ -239,7 +239,7 @@
           <p class="text-welcome">Thanks for signing up</p>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-raised-button>Okay</button>
+          <button mat-raised-button routerLink="">Okay</button>
         </mat-card-actions>
       </div>
 

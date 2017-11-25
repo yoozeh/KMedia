@@ -12,6 +12,8 @@ import { KValidator } from '../../classes/k-validator';
 
 import { DialogComponent } from '../dialog/dialog.component';
 
+import { KUser } from '../../../common/k-user';
+
 @Component({
   selector: 'k-sign-up',
   templateUrl: './sign-up.component.html',
@@ -36,14 +38,14 @@ export class SignUpComponent implements OnInit {
 
   public account = {
     email: '',
-    password: ''
+    password: '',
+    nickname: ''
   };
 
   public personal = {
-    nickname: '',
     name: '',
-    gender: '',
-    birth: ''
+    birth: '',
+    gender: ''
   };
 
   public isHidePassword: boolean = true;
@@ -138,6 +140,20 @@ export class SignUpComponent implements OnInit {
           );
         }
       });
+
+
+    ///////////////////////////////////////////
+    this.agreement.termsOfService = true;
+    this.agreement.privacyPolicy = true;
+
+    this.account.email = 'test1@email.test';
+    this.account.password = 'test1password`';
+    this.step2.controls.confirm.setValue('test1password`');
+    this.account.nickname = 'tester1';
+    this.personal.name = 'Tester One';
+    this.personal.gender = 'male';
+    this.personal.birth = '1982-07-05';
+    ///////////////////////////////////////////
   }
 
   private _validateConfirmPassword(): ValidatorFn {
@@ -180,17 +196,17 @@ export class SignUpComponent implements OnInit {
         switch (error) {
           case 'minlength':
             return this.step3.controls.nickname.hasError('minlength') ||
-              this.personal.nickname.length === 0;
+              this.account.nickname.length === 0;
           case 'maxlength':
             return this.step3.controls.nickname.hasError('maxlength') ||
-              this.personal.nickname.length === 0;
+              this.account.nickname.length === 0;
           case 'first':
             return this.step3.controls.nickname.hasError('first');
           case 'letter':
             return this.step3.controls.nickname.hasError('letter');
           case 'already':
             return this.step3.controls.nickname.hasError('already') ||
-              this.personal.nickname.length === 0;
+              this.account.nickname.length === 0;
         }
         break;
     }
@@ -232,12 +248,35 @@ export class SignUpComponent implements OnInit {
   public submit(): void {
     this.loadingHeight = this._elementRef.nativeElement.querySelector('mat-vertical-stepper').offsetHeight;
     this._index = 0;
-    let data = {
-      agreement: this.agreement,
-      account: this.account,
-      personal: this.personal
-    };
-    this._network.request('sign-up', '', data).subscribe(
+    let personal: {} = null;
+    if (this.personal.name) {
+      personal = { ...personal, name: this.personal.name };
+    }
+    if (this.personal.birth) {
+      personal = { ...personal, birth: new Date(this.personal.birth) };
+    }
+    if (this.personal.gender) {
+      if (this.personal.gender === 'male') {
+        personal = { ...personal, gender: 1 };
+      } else if (this.personal.gender === 'v') {
+        personal = { ...personal, gender: -1 };
+      }
+    }
+    let data: any = null;
+    if (personal) {
+      data = {
+        account: this.account,
+        personal: personal,
+        fields: { agreement: this.agreement }
+      };
+    } else {
+      data = {
+        account: this.account,
+        fields: { agreement: this.agreement }
+      };
+    }
+    let user = new KUser(data);
+    this._network.request('sign-up', '', user.toJSON()).subscribe(
       (response) => {
         if (response.result) {
           this._index = 2;
