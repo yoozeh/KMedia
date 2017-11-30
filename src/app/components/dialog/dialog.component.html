@@ -1,4 +1,5 @@
 <h1 mat-dialog-title *ngIf="data.title">{{ data.title }}</h1>
 <mat-dialog-content>
   <k-terms *ngIf="data.type==='terms'" [index]="data.index"></k-terms>
+  <k-sign-in *ngIf="data.type==='sign-in'" (eventEmitter)="onChild($event)"></k-sign-in>
 </mat-dialog-content>

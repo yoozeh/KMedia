@@ -18,11 +18,14 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { RedirectComponent } from './components/redirect/redirect.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { TermsComponent } from './components/terms/terms.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { FoundationComponent } from './components/foundation/foundation.component';
 
 @NgModule({
   declarations: [
@@ -34,11 +37,14 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     FooterComponent,
     HomeComponent,
     PageNotFoundComponent,
+    RedirectComponent,
     SidenavComponent,
+    SignInComponent,
     SignUpComponent,
     TermsComponent,
     ToolbarComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    FoundationComponent
   ],
   imports: [
     BrowserModule,

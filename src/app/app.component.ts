@@ -1,4 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { MatSidenav } from '@angular/material';
 
 @Component({
@@ -8,21 +9,6 @@ import { MatSidenav } from '@angular/material';
 })
 export class AppComponent {
 
-  @ViewChild(MatSidenav)
-  private _sidenav: MatSidenav;
-
-  onSidenav(event: string): void {
-    switch (event) {
-      case 'open':
-        this._sidenav.open();
-        break;
-      case 'close':
-        this._sidenav.close();
-        break;
-      case 'toggle':
-        this._sidenav.toggle();
-        break;
-    }
-  }
+  constructor() { }
 
 }

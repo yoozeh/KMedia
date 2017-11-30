@@ -1,0 +1,40 @@
+<div class="waiting-container" fxFill>
+  <mat-progress-bar class="waiting-bar" color="primary" mode="indeterminate" [fxShow]="disabled">
+  </mat-progress-bar>
+</div>
+<div class="container">
+  <mat-card-title>
+    {{ text.sign_in }}
+  </mat-card-title>
+  <mat-card-subtitle>{{ text.sign_in_description }}</mat-card-subtitle>
+
+  <mat-card-content>
+    <form [formGroup]="formGroup" novalidate>
+      <div fxLayout="row">
+        <mat-form-field fxFlex>
+          <input matInput formControlName="email" [(ngModel)]="account.email" placeholder="{{ text.email_placeholder }}" required>
+          <mat-error *ngIf="formGroup.controls.email.hasError('required')">{{ text.require }}</mat-error>
+          <mat-error *ngIf="formGroup.controls.email.hasError('invalid')">{{ text.email_error.invalid }}</mat-error>
+        </mat-form-field>
+      </div>
+      <br>
+      <div fxLayout="row">
+        <mat-form-field fxFlex>
+          <input matInput type="password" formControlName="password" [(ngModel)]="account.password" placeholder="{{ text.password_placeholder }}"
+            required>
+          <mat-error *ngIf="formGroup.controls.password.hasError('required')">{{ text.require }}</mat-error>
+          <mat-error *ngIf="formGroup.controls.password.hasError('minlength')">{{ text.password_error.minlength }}</mat-error>
+          <mat-error *ngIf="formGroup.controls.password.hasError('maxlength')">{{ text.password_error.maxlength }}</mat-error>
+        </mat-form-field>
+      </div>
+      <br>
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <div class="k-sign-in-failed" *ngIf="failed" fxLayoutAlign="start center" fxFlex>
+          <mat-icon class="k-sign-in-failed" fxLayoutAlign="center center">block</mat-icon>
+          {{ text.sign_in_error.failed }}
+        </div>
+        <button mat-raised-button color="primary" [disabled]="formGroup.invalid || disabled" (click)="onSignIn()">{{ text.sign_in }}</button>
+      </div>
+    </form>
+  </mat-card-content>
+</div>

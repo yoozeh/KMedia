@@ -1,4 +1,4 @@
-<mat-toolbar class="mat-elevation-z5 container" color="primary">
+<mat-toolbar class="mat-elevation-z2 container" color="primary">
   <button mat-icon-button class="button-menu" (click)="onMenu()">
     <mat-icon>menu</mat-icon>
   </button>
@@ -6,6 +6,11 @@
   <div fxFlex fxLayoutAlign="end center">
     <input type="search" class="input-search" placeholder="Search" fxHide.lt-sm>
   </div>
-  <button mat-button class="button" routerLink="">{{ text.sign_in }}</button>
-  <button mat-button class="button" routerLink="/sign-up">{{ text.sign_up }}</button>
+  <div *ngIf="user.signed">
+    <button mat-button class="button" (click)="onSignOut()">{{ text.sign_out }}</button>
+  </div>
+  <div *ngIf="!user.signed">
+    <button mat-button class="button" (click)="onSignIn()">{{ text.sign_in }}</button>
+    <button mat-button class="button" routerLink="/sign-up" replaceUrl="true">{{ text.sign_up }}</button>
+  </div>
 </mat-toolbar>

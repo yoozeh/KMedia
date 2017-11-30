@@ -15,6 +15,7 @@
   "next": "Next",
   "back": "Back",
   "done": "Done",
+  "okay": "Okay",
 
   "sign_up": "Sign Up",
   "sign_up_step1": "Step 1",
@@ -26,9 +27,15 @@
   "sign_up_step3_title": "Personal",
   "sign_up_step4": "Done",
   "sign_up_step4_title": "Check your information",
+  "sign_up_done_message": "Thanks for signing up",
 
   "sign_in": "Sign In",
   "sign_in_description": "Input sign-in informations",
+  "sign_in_error": {
+    "failed": "Sign in failed"
+  },
+
+  "sign_out": "Sign Out",
 
   "email": "Email",
   "email_placeholder": "Enter your email",

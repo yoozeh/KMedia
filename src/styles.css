@@ -7,3 +7,13 @@ html, body {
   padding: 0;
   min-height: 100vh;
 }
+
+.sign-in-container > .mat-dialog-container {
+  padding: 0;
+}
+
+.sign-in-container > .mat-dialog-container > * > .mat-dialog-content {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}

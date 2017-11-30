@@ -245,11 +245,13 @@ export class KMatDateInputComponent implements OnInit, OnDestroy, ControlValueAc
   }
 
   public ngOnInit(): void {
-    this._focusMonitor.monitor(this._elementRef.nativeElement, this._renderer, true)
-      .subscribe((origin) => {
-        this.focused = !!origin;
-        this.stateChanges.next();
-      });
+    this._focusMonitor.monitor(
+      this._elementRef.nativeElement,
+      this._renderer, true
+    ).subscribe((origin) => {
+      this.focused = !!origin;
+      this.stateChanges.next();
+    });
     this._listYear = Array.from(
       { length: this._endYear - this._startYear + 1 },
       (_, key) => (this._endYear - key).toString()
@@ -284,28 +286,37 @@ export class KMatDateInputComponent implements OnInit, OnDestroy, ControlValueAc
     let array = KMatDateInputComponent._listDay.slice(0, lastMonthDay - 31);
     if (this._prevLastDay !== array.length) {
       this._prevLastDay = array.length;
-      this.filtered.day = this.formGroup.controls.day.valueChanges
-        .pipe(debounceTime(200), startWith(null), map((value) => {
+      this.filtered.day = this.formGroup.controls.day.valueChanges.pipe(
+        debounceTime(200),
+        startWith(null),
+        map((value) => {
           return value ? this._filterString(value, array) : array.slice();
-        }));
+        })
+      );
     }
   }
 
   private _applyFilter(): void {
-    this.filtered.year = this.formGroup.controls.year.valueChanges
-      .pipe(debounceTime(200), startWith(null), map((value) => {
+    this.filtered.year = this.formGroup.controls.year.valueChanges.pipe(
+      debounceTime(200),
+      startWith(null),
+      map((value) => {
         this._applyLastDay();
         return value ?
           this._filterString(value, this._listYear) :
           this._listYear.slice();
-      }))
-    this.filtered.month = this.formGroup.controls.month.valueChanges
-      .pipe(debounceTime(200), startWith(null), map((value) => {
+      })
+    );
+    this.filtered.month = this.formGroup.controls.month.valueChanges.pipe(
+      debounceTime(200),
+      startWith(null),
+      map((value) => {
         this._applyLastDay();
         return value ?
           this._filterString(value, KMatDateInputComponent._listMonth) :
           KMatDateInputComponent._listMonth.slice();
-      }));
+      })
+    );
     this._applyLastDay();
   }
 
@@ -321,39 +332,5 @@ export class KMatDateInputComponent implements OnInit, OnDestroy, ControlValueAc
       event.preventDefault();
     }
   }
-
-  /*
-  public keyPressYear(event: any) {
-    if (!/[\d]/.test(event.key)) {
-      event.preventDefault();
-    }
-    let value = event.target.value;
-    let selectionStart = event.target.selectionStart;
-    let selectionEnd = event.target.selectionEnd;
-    let result = value.slice(0, selectionStart) + event.key + value.slice(selectionEnd);
-    const number = Number(result);
-    console.log(event);
-    if (number > this._endYear) {
-      event.preventDefault();
-    }
-  }
-  public keyPressMonth(event: any) {
-    const pattern = /[\d]/;
-    if (!pattern.test(event.key)) {
-      event.preventDefault();
-    }
-  }
-  public keyPressDay(event: any) {
-    const pattern = /^[\d]{,2}$/;
-    const string = event.target.value;
-    const number = Number(string);
-    let lastMonthDay = KMatDateInputComponent.getLastMonthDay(
-      Number(this._value.year), Number(this._value.month)
-    );
-    if (!pattern.test(string) || number < 1 || number > lastMonthDay) {
-      event.preventDefault()
-    }
-  }
-  */
 
 }

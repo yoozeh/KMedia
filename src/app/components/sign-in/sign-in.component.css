@@ -1,0 +1,16 @@
+.waiting-container {
+  position: relative;
+}
+
+.waiting-bar {
+  position: absolute;
+}
+
+.container {
+  padding: 24px 24px 0 24px;
+}
+
+.k-sign-in-failed {
+  color: #f44336;
+  font-size: 1em;
+}

@@ -1,17 +1,17 @@
 import { Component, OnInit, Inject, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl, Validators, ValidatorFn } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatDialog, MatVerticalStepper } from '@angular/material';
 import { debounceTime } from 'rxjs/operators';
 
-import { KRegExp } from '../../../common/k-reg-exp';
-
-import { KT_JSON, APP_TEXT } from '../../app.environments.service';
 import { NetworkService } from '../../services/network.service';
+import { UserService } from '../../services/user.service';
+import { KT_JSON, APP_TEXT } from '../../app.environments.service';
 
 import { KValidator } from '../../classes/k-validator';
-
 import { DialogComponent } from '../dialog/dialog.component';
 
+import { KRegExp } from '../../../common/k-reg-exp';
 import { KUser } from '../../../common/k-user';
 
 @Component({
@@ -55,10 +55,15 @@ export class SignUpComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private _elementRef: ElementRef,
+    private _router: Router,
     private _dialog: MatDialog,
+    private _user: UserService,
     private _network: NetworkService,
     @Inject(APP_TEXT) public text: KT_JSON
   ) {
+    if (this._user.signed) {
+      this._router.navigate(['redirect']);
+    }
     this.step1 = this._formBuilder.group({
       checkAll: '',
       checkTOS: ['', Validators.required],
@@ -99,7 +104,6 @@ export class SignUpComponent implements OnInit {
       gender: '',
       birthDate: '',
     });
-
     this.gender = [
       { text: this.text.male, value: 'male' },
       { text: this.text.female, value: 'female' }
@@ -112,48 +116,34 @@ export class SignUpComponent implements OnInit {
         this.step2.controls.confirm.updateValueAndValidity();
       }
     });
-    this.step2.controls.email.valueChanges
-      .pipe(debounceTime(800))
-      .subscribe((value) => {
-        if (value.length > 0 && this.step2.controls.email.valid) {
-          this._network.request('check-email', value).subscribe(
-            (response) => {
-              if (response.result) {
-                this.step2.controls.email.setErrors({ 'already': true });
-              }
-            },
-            (error) => { console.log(error); }
-          );
-        }
-      });
-    this.step3.controls.nickname.valueChanges
-      .pipe(debounceTime(800))
-      .subscribe((value) => {
-        if (value.length > 0 && this.step3.controls.nickname.valid) {
-          this._network.request('check-nickname', value).subscribe(
-            (response) => {
-              if (response.result) {
-                this.step3.controls.nickname.setErrors({ 'already': true });
-              }
-            },
-            (error) => { console.log(error); }
-          );
-        }
-      });
-
-
-    ///////////////////////////////////////////
-    this.agreement.termsOfService = true;
-    this.agreement.privacyPolicy = true;
-
-    this.account.email = 'test1@email.test';
-    this.account.password = 'test1password`';
-    this.step2.controls.confirm.setValue('test1password`');
-    this.account.nickname = 'tester1';
-    this.personal.name = 'Tester One';
-    this.personal.gender = 'male';
-    this.personal.birth = '1982-07-05';
-    ///////////////////////////////////////////
+    this.step2.controls.email.valueChanges.pipe(
+      debounceTime(800)
+    ).subscribe((value) => {
+      if (value.length > 0 && this.step2.controls.email.valid) {
+        this._network.request('check-email', value).subscribe(
+          (response) => {
+            if (response.result) {
+              this.step2.controls.email.setErrors({ 'already': true });
+            }
+          },
+          (error) => { console.log(error); }
+        );
+      }
+    });
+    this.step3.controls.nickname.valueChanges.pipe(
+      debounceTime(800)
+    ).subscribe((value) => {
+      if (value.length > 0 && this.step3.controls.nickname.valid) {
+        this._network.request('check-nickname', value).subscribe(
+          (response) => {
+            if (response.result) {
+              this.step3.controls.nickname.setErrors({ 'already': true });
+            }
+          },
+          (error) => { console.log(error); }
+        );
+      }
+    });
   }
 
   private _validateConfirmPassword(): ValidatorFn {
@@ -246,46 +236,48 @@ export class SignUpComponent implements OnInit {
   }
 
   public submit(): void {
-    this.loadingHeight = this._elementRef.nativeElement.querySelector('mat-vertical-stepper').offsetHeight;
-    this._index = 0;
-    let personal: {} = null;
-    if (this.personal.name) {
-      personal = { ...personal, name: this.personal.name };
-    }
-    if (this.personal.birth) {
-      personal = { ...personal, birth: new Date(this.personal.birth) };
-    }
-    if (this.personal.gender) {
-      if (this.personal.gender === 'male') {
-        personal = { ...personal, gender: 1 };
-      } else if (this.personal.gender === 'v') {
-        personal = { ...personal, gender: -1 };
+    if (this.step1.valid && this.step2.valid && this.step3.valid) {
+      this.loadingHeight = this._elementRef.nativeElement.querySelector('mat-vertical-stepper').offsetHeight;
+      this._index = 0;
+      let personal: {} = null;
+      if (this.personal.name) {
+        personal = { ...personal, name: this.personal.name };
       }
-    }
-    let data: any = null;
-    if (personal) {
-      data = {
-        account: this.account,
-        personal: personal,
-        fields: { agreement: this.agreement }
-      };
-    } else {
-      data = {
-        account: this.account,
-        fields: { agreement: this.agreement }
-      };
-    }
-    let user = new KUser(data);
-    this._network.request('sign-up', '', user.toJSON()).subscribe(
-      (response) => {
-        if (response.result) {
-          this._index = 2;
-        } else {
-          this._index = 3;
+      if (this.personal.birth) {
+        personal = { ...personal, birth: new Date(this.personal.birth) };
+      }
+      if (this.personal.gender) {
+        if (this.personal.gender === 'male') {
+          personal = { ...personal, gender: 1 };
+        } else if (this.personal.gender === 'female') {
+          personal = { ...personal, gender: -1 };
         }
-      },
-      (error) => { console.log(error); }
-    );
+      }
+      let data: any = null;
+      if (personal) {
+        data = {
+          account: this.account,
+          personal: personal,
+          fields: { agreement: this.agreement }
+        };
+      } else {
+        data = {
+          account: this.account,
+          fields: { agreement: this.agreement }
+        };
+      }
+      let user = new KUser(data);
+      this._network.request('sign-up', user.toJSON()).subscribe(
+        (response) => {
+          if (response.result) {
+            this._index = 2;
+          } else {
+            this._index = 3;
+          }
+        },
+        (error) => { console.log(error); }
+      );
+    }
   }
 
 }

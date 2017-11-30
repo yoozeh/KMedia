@@ -1,0 +1,14 @@
+<mat-sidenav-container>
+  <mat-sidenav class="sidenav" mode="over">
+    <k-sidenav></k-sidenav>
+  </mat-sidenav>
+  <header>
+    <k-toolbar (eventEmitter)="onSidenav($event)"></k-toolbar>
+  </header>
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+  <footer class="footer">
+    <k-footer fxFlex></k-footer>
+  </footer>
+</mat-sidenav-container>

@@ -135,8 +135,7 @@
                 <label class="input-label" fxHide.xs fxLayoutAlign="end center">{{ text.nickname }}</label>
                 <mat-form-field fxFlex>
                   <span matPrefix>@</span>
-                  <input matInput formControlName="nickname" [(ngModel)]="account.nickname" placeholder="{{ text.nickname_placeholder }}"
-                    required>
+                  <input matInput formControlName="nickname" [(ngModel)]="account.nickname" placeholder="{{ text.nickname_placeholder }}" required>
                   <mat-hint fxLayout="column">
                     <k-mat-notice-text [size]="1" [status]="checkError('nickname', 'minlength') ? 'danger' : 'success'">
                       {{ text.nickname_error.minlength }}
@@ -236,10 +235,10 @@
       <div *ngIf="index === 2" fxLayout="column" fxLayoutAlign="center center">
         <img class="img-welcome" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Thank-you-word-cloud.jpg">
         <mat-card-content>
-          <p class="text-welcome">Thanks for signing up</p>
+          <p class="text-welcome">{{ text.sign_up_done_message }}</p>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-raised-button routerLink="">Okay</button>
+          <button mat-raised-button routerLink="">{{ text.okay }}</button>
         </mat-card-actions>
       </div>
 
